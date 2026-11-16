@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tomás Estévez - Portfolio</title>
+    <meta name="description" content="Portfolio de Tomás Estévez - Diseñador Multimedial">
+
+    <!-- Fuentes estilo Nintendo/Animal Crossing -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/hero-console.css">
+    <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js"}}</script>
+</head>
+<body>
+
+    <!-- Cielo con nubes animadas -->
+    <div class="sky">
+        <div class="cloud cloud-1">☁️</div>
+        <div class="cloud cloud-2">☁️</div>
+        <div class="cloud cloud-3">☁️</div>
+        <div class="cloud cloud-4">☁️</div>
+    </div>
+
+    <!-- Pasto inferior -->
+    <div class="grass"></div>
+
+    <!-- Decoraciones flotantes -->
+    <div class="float-deco leaf-1">🍃</div>
+    <div class="float-deco leaf-2">🌸</div>
+    <div class="float-deco leaf-3">⭐</div>
+    <div class="float-deco leaf-4">🦋</div>
+
+    <!-- Header / Hero -->
+    <header class="hero">
+        <h1 class="sr-only">Tomás Estévez — Diseñador Multimedial / Visual</h1>
+        <div class="ds-console">
+            <div class="ds-screen ds-top">
+                <canvas id="stage" aria-label="Personaje 3D interactivo de Tomás"></canvas>
+                <canvas id="fx" aria-hidden="true"></canvas>
+                <div class="hud-bubble" id="bubble" aria-live="polite"></div>
+                <div class="hud-bells">🔔 <span id="bells">00000</span></div>
+                <div class="hud-clock" id="clock"></div>
+                <div class="hud-loading" id="loading">Cargando isla…</div>
+            </div>
+            <div class="ds-hinge"></div>
+            <div class="ds-screen ds-bottom">
+                <div class="ds-tabs" role="tablist" aria-label="Modos del personaje">
+                    <button class="tab on" data-mode="base" role="tab" aria-label="Saludo">👋</button>
+                    <button class="tab" data-mode="music" role="tab" aria-label="Música">🎧</button>
+                    <button class="tab" data-mode="pokemon" role="tab" aria-label="Pokémon"><span class="pk"></span></button>
+                    <button class="tab" data-mode="raver" role="tab" aria-label="Raver">🕶️</button>
+                    <button class="tab" data-mode="gaming" role="tab" aria-label="Gaming">🎮</button>
+                </div>
+                <div class="ds-panel" id="panel"></div>
+            </div>
+        </div>
+
+        <!-- Menú tipo Animal Crossing -->
+        <nav class="ac-menu">
+            <a href="#sobre-mi" class="menu-btn">
+                <span class="menu-icon">👤</span>
+                <span class="menu-text">Sobre mí</span>
+            </a>
+            <a href="#habilidades" class="menu-btn">
+                <span class="menu-icon">💪</span>
+                <span class="menu-text">Habilidades</span>
+            </a>
+            <a href="#proyectos" class="menu-btn">
+                <span class="menu-icon">📁</span>
+                <span class="menu-text">Proyectos</span>
+            </a>
+            <a href="#contacto" class="menu-btn">
+                <span class="menu-icon">✉️</span>
+                <span class="menu-text">Contacto</span>
+            </a>
+        </nav>
+    </header>
+
+    <main>
+
+        <!-- Sobre Mí -->
+        <section id="sobre-mi" class="ac-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="title-icon">🌱</span>
+                    Sobre mí
+                </h2>
+                <div class="title-deco">
+                    <span class="deco-flower">🌼</span>
+                    <span class="deco-flower">🌷</span>
+                    <span class="deco-flower">🌻</span>
+                </div>
+            </div>
+
+            <div class="ac-card profile-card">
+                <div class="profile-content">
+                    <div class="profile-text">
+                        <p class="speech-bubble">
+                            ¡Hola! Soy <strong>Tomás</strong> 🌟
+                        </p>
+                        <p>
+                            Estudiante de <strong>Diseño Multimedial</strong> en la UNLP, 
+                            dando mis primeros pasos en proyectos digitales.
+                        </p>
+                        <p>
+                            Tengo facilidad tecnológica, lo que me permite resolver 
+                            problemas técnicos de manera efectiva.
+                        </p>
+                        <p>
+                            Busco aportar mis conocimientos en <strong>edición de video</strong>, 
+                            <strong>motion graphics</strong> y <strong>diseño</strong> para seguir 
+                            aprendiendo en la práctica.
+                        </p>
+                    </div>
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <span class="stat-icon">🎓</span>
+                            <span class="stat-label">UNLP</span>
+                            <span class="stat-value">2023-Presente</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-icon">💻</span>
+                            <span class="stat-label">Multimedial</span>
+                            <span class="stat-value">Diseño</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-icon">🎨</span>
+                            <span class="stat-label">Creativo</span>
+                            <span class="stat-value">Visual</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Habilidades -->
+        <section id="habilidades" class="ac-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="title-icon">🌿</span>
+                    Habilidades
+                </h2>
+                <div class="title-deco">
+                    <span class="deco-flower">🍀</span>
+                    <span class="deco-flower">🌸</span>
+                    <span class="deco-flower">🌺</span>
+                </div>
+            </div>
+
+            <div class="skills-grid">
+                <div class="ac-card skill-card">
+                    <h3 class="skill-title">✨ Soft Skills</h3>
+                    <ul class="skill-list">
+                        <li class="skill-item">
+                            <span class="skill-bullet">🎬</span>
+                            <span>Motion Graphics</span>
+                        </li>
+                        <li class="skill-item">
+                            <span class="skill-bullet">📹</span>
+                            <span>Edición de Video</span>
+                        </li>
+                        <li class="skill-item">
+                            <span class="skill-bullet">📱</span>
+                            <span>Diseño UX/UI</span>
+                        </li>
+                        <li class="skill-item">
+                            <span class="skill-bullet">🎨</span>
+                            <span>Estética Visual</span>
+                        </li>
+                        <li class="skill-item">
+                            <span class="skill-bullet">✏️</span>
+                            <span>Diseño Gráfico</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="ac-card skill-card">
+                    <h3 class="skill-title">🛠️ Herramientas</h3>
+                    <div class="tools-grid">
+                        <div class="tool-badge">
+                            <span class="tool-icon" style="background: #31A8FF;">Ps</span>
+                            <span>Photoshop</span>
+                        </div>
+                        <div class="tool-badge">
+                            <span class="tool-icon" style="background: #FF9A00;">Ai</span>
+                            <span>Illustrator</span>
+                        </div>
+                        <div class="tool-badge">
+                            <span class="tool-icon" style="background: #9999FF;">Ae</span>
+                            <span>After Effects</span>
+                        </div>
+                        <div class="tool-badge">
+                            <span class="tool-icon" style="background: #1E1E1E;">Fg</span>
+                            <span>Figma</span>
+                        </div>
+                        <div class="tool-badge">
+                            <span class="tool-icon" style="background: linear-gradient(135deg, #00C4CC, #7D2AE8);">Cv</span>
+                            <span>Canva</span>
+                        </div>
+                        <div class="tool-badge">
+                            <span class="tool-icon" style="background: #000;">Cc</span>
+                            <span>CapCut</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Proyectos -->
+        <section id="proyectos" class="ac-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="title-icon">🌳</span>
+                    Proyectos
+                </h2>
+                <div class="title-deco">
+                    <span class="deco-flower">🌼</span>
+                    <span class="deco-flower">🏠</span>
+                    <span class="deco-flower">🌷</span>
+                </div>
+            </div>
+
+            <!-- Proyecto 1: Filo News -->
+            <article class="ac-card project-card">
+                <div class="project-header">
+                    <span class="project-number">01</span>
+                    <h3 class="project-name">Rediseño Filo News</h3>
+                    <span class="project-tag tag-red">UI/UX</span>
+                </div>
+                <div class="project-body">
+                    <div class="project-image">
+                        <img src="assets/ref-room1.jpg" alt="Proyecto Filo News" class="project-img">
+                        <div class="image-overlay">
+                            <span class="overlay-text">Ver más</span>
+                        </div>
+                    </div>
+                    <div class="project-info">
+                        <p class="project-desc">
+                            Rediseño de la sección de música de Filo News, enfocado en que 
+                            los usuarios descubran playlists sin vueltas y con alto impacto visual.
+                        </p>
+                        <p class="project-desc">
+                            Arquitectura de interfaz y jerarquías pensadas para conectar al 
+                            público joven con las tendencias musicales de forma directa y atractiva.
+                        </p>
+                        <div class="project-details">
+                            <p>
+                                Este rediseño nació a partir de un estudio de usuarios, adaptando 
+                                la interfaz para mobile y desktop con el objetivo de conectar al 
+                                público con las tendencias musicales de forma directa y dinámica.
+                            </p>
+                            <p>
+                                <strong>Concepto:</strong> "Tu Radar Musical" - propone al usuario 
+                                recibir una playlist según su estado de ánimo (mood) y sus gustos musicales.
+                            </p>
+                        </div>
+                        <div class="project-buttons">
+                            <a href="#" class="ac-btn btn-primary">Ver Prototipo</a>
+                            <a href="#" class="ac-btn btn-secondary">Ver Memoria</a>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Proyecto 2: Edición de Video -->
+            <article class="ac-card project-card">
+                <div class="project-header">
+                    <span class="project-number">02</span>
+                    <h3 class="project-name">Edición de Video & Reels</h3>
+                    <span class="project-tag tag-blue">Video</span>
+                </div>
+                <div class="project-body">
+                    <div class="project-gallery">
+                        <div class="gallery-item">
+                            <img src="assets/ref-garden.gif" alt="Video proyecto" class="gallery-img">
+                        </div>
+                        <div class="gallery-item">
+                            <img src="assets/ref-room2.jpg" alt="Video proyecto" class="gallery-img">
+                        </div>
+                    </div>
+                    <div class="project-info">
+                        <p class="project-desc">
+                            Contenido audiovisual para redes sociales con enfoque en dinamismo, 
+                            ritmo y narrativa visual impactante.
+                        </p>
+                        <div class="project-buttons">
+                            <a href="#" class="ac-btn btn-primary">Ver Videos</a>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Proyecto 3: Construcción Visual -->
+            <article class="ac-card project-card">
+                <div class="project-header">
+                    <span class="project-number">03</span>
+                    <h3 class="project-name">Construcción Visual</h3>
+                    <span class="project-tag tag-green">Branding</span>
+                </div>
+                <div class="project-body">
+                    <div class="project-image">
+                        <img src="assets/ref-stickers.jpg" alt="Proyecto Construcción Visual" class="project-img">
+                    </div>
+                    <div class="project-info">
+                        <p class="project-desc">
+                            Creación de la identidad visual, manual de marca y piezas de motion 
+                            graphics para un proyecto de un universo onírico.
+                        </p>
+                        <p class="project-desc">
+                            Este universo habita el territorio de los sueños. Al atravesar sus 
+                            portales liminales se revela una atmósfera misteriosa, guiada por una 
+                            identidad visual inmersiva, tipografías esculpidas en el espacio y símbolos.
+                        </p>
+                        <div class="color-palette">
+                            <div class="color-item" style="background: #FF71CE;">
+                                <span>#FF71CE</span>
+                            </div>
+                            <div class="color-item" style="background: #4B75FF;">
+                                <span>#4B75FF</span>
+                            </div>
+                            <div class="color-item" style="background: #24251E;">
+                                <span>#24251E</span>
+                            </div>
+                            <div class="color-item" style="background: #F1EEE7;">
+                                <span>#F1EEE7</span>
+                            </div>
+                        </div>
+                        <div class="project-buttons">
+                            <a href="#" class="ac-btn btn-primary">Ver Proyecto</a>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+        </section>
+
+        <!-- Contacto -->
+        <section id="contacto" class="ac-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="title-icon">💌</span>
+                    ¡Hablemos!
+                </h2>
+                <div class="title-deco">
+                    <span class="deco-flower">🌸</span>
+                    <span class="deco-flower">💮</span>
+                    <span class="deco-flower">🌺</span>
+                </div>
+            </div>
+
+            <div class="ac-card contact-card">
+                <div class="contact-message">
+                    <p class="contact-big">¡Disponible para proyectos! 🌟</p>
+                    <p class="contact-sub">
+                        ¿Tenés una idea? ¡Conversemos y la hacemos realidad!
+                    </p>
+                </div>
+
+                <div class="contact-buttons">
+                    <a href="mailto:esteveztomii@gmail.com" class="contact-btn btn-mail">
+                        <span class="contact-icon">✉️</span>
+                        <span class="contact-text">esteveztomii@gmail.com</span>
+                    </a>
+                    <a href="tel:+5491135641671" class="contact-btn btn-phone">
+                        <span class="contact-icon">📱</span>
+                        <span class="contact-text">+54 9 11 3564-1671</span>
+                    </a>
+                </div>
+
+                <div class="contact-deco">
+                    <span class="deco-item">🦋</span>
+                    <span class="deco-item">🌷</span>
+                    <span class="deco-item">⭐</span>
+                    <span class="deco-item">🍃</span>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="ac-footer">
+        <p>Hecho con 💚 por Tomás Estévez</p>
+        <p class="footer-deco">🌱 🌷 🌳 🌸 🍀</p>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script type="module" src="js/hero3d.js"></script>
+</body>
+</html>

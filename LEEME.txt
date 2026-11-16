@@ -1,0 +1,4 @@
+Portfolio Tomás Estévez
+1) Descomprimí el zip y abrí index.html con doble clic (necesita internet solo para las fuentes de Google).
+2) Tus canciones: copiá 5 mp3 a assets/audio/ con los nombres 01.mp3 a 05.mp3 y editá los títulos en la lista TRACKS al inicio de js/hero3d.js.
+3) Para GitHub Pages subí la carpeta entera tal cual.

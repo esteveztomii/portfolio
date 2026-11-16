@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tomás Estévez — Portfolio</title>
+<meta name="description" content="Portfolio de Tomás Estévez, estudiante de Diseño Multimedial en la UNLP: UI/UX, edición de video, motion graphics y animación.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Poppins:wght@400;500&family=VT323&display=swap" rel="stylesheet">
+<style>
+:root{--azul:#1a00d4;--rosa:#ff6bff;--verde:#16d93a;--amarillo:#fff94a;--naranja:#ff5a1f;--rojo:#e8202a;--gris:#d4d4d4;--papel:#f7f7f7;--tinta:#14121f}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-bottom:60px}
+body{margin:0;font-family:Poppins,system-ui,sans-serif;color:var(--tinta);line-height:1.6;padding-bottom:56px;
+ background:linear-gradient(#8fb8e8 0,#cfe3f7 220px,#7fae4b 220px,#4f8a2c 100%) fixed}
+a{color:var(--azul)}
+:focus-visible{outline:3px solid var(--naranja);outline-offset:2px}
+.px{font-family:VT323,monospace;text-transform:uppercase;letter-spacing:.04em;line-height:.95}
+.cursiva{font-family:"Pinyon Script",cursive;text-transform:none;font-size:1.5em;line-height:.6;vertical-align:-.12em}
+main{max-width:1000px;margin:0 auto;padding:24px 16px 40px;display:grid;gap:40px}
+/* ventanas */
+.win{background:var(--gris);border:2px solid;border-color:#fff #404040 #404040 #fff;box-shadow:4px 4px 0 rgba(0,0,0,.35)}
+.win>header{background:var(--azul);color:#fff;display:flex;justify-content:space-between;align-items:center;padding:3px 6px;font-family:VT323,monospace;font-size:1.25rem}
+.win>header i{font-style:normal;display:flex;gap:3px}
+.win>header b{width:16px;height:16px;background:var(--gris);border:2px solid;border-color:#fff #404040 #404040 #fff}
+.win .body{margin:4px;background:var(--papel);border:2px solid;border-color:#404040 #fff #fff #404040;padding:20px}
+h1,h2{margin:0;font-weight:400}
+h2{font-size:clamp(2.4rem,7vw,4.2rem);color:var(--azul)}
+/* hero */
+.hero .body{text-align:center;padding:28px 16px}
+.hero h1{font-size:clamp(3.2rem,15vw,9rem);color:var(--rosa)}
+.hero h1 .a{color:var(--rojo)}.hero h1 .b{color:var(--azul)}.hero h1 .c{color:var(--naranja)}
+.hero p{margin:12px auto 0;max-width:46ch}
+.iconos{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:22px}
+.iconos a{font-family:VT323,monospace;font-size:1.4rem;text-decoration:none;color:var(--tinta);background:var(--gris);padding:4px 16px;border:2px solid;border-color:#fff #404040 #404040 #fff}
+.iconos a:hover{background:var(--amarillo)}
+.iconos a:active{border-color:#404040 #fff #fff #404040}
+/* sobre mi */
+.sobre .body{display:grid;grid-template-columns:minmax(0,260px) 1fr;gap:24px;align-items:center}
+.foto{position:relative}
+.foto img{display:block;width:100%;height:auto}
+.chip{position:absolute;font-family:VT323,monospace;font-size:1.4rem;padding:0 12px;border-radius:20px;border:2px solid var(--tinta);transform:rotate(-8deg)}
+.chip.t{background:var(--rosa);top:8px;left:-8px}.chip.e{background:var(--amarillo);bottom:28px;right:-8px;transform:rotate(8deg)}
+.verdes{display:grid;gap:12px;margin:0;padding:0;list-style:none}
+.verdes li{background:linear-gradient(#7dfb8a,#16d93a);border-radius:18px;padding:14px 20px;font-weight:500}
+/* educacion */
+.edu .body{display:grid;gap:20px}
+.cinta{background:var(--amarillo);border-radius:30px;padding:6px 20px;font-family:VT323,monospace;font-size:1.3rem;text-align:center}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.cols .win .body{padding:16px}
+.cols h3{margin:0 0 8px;font-family:VT323,monospace;font-weight:400;font-size:1.5rem;background:var(--rosa);display:inline-block;padding:0 16px;border-radius:20px;border:2px solid var(--tinta)}
+.cols ul{margin:0;padding-left:1.1em}
+.cols .logos{list-style:none;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:14px 12px}
+.logos li{display:flex;align-items:center;gap:10px;font-weight:500}
+.logos img{width:56px;height:56px;flex:none}
+/* proyectos */
+.proy{display:grid;gap:32px}
+.proy-head{background:var(--tinta);padding:40px 16px;text-align:center}
+.proy-head h2{color:var(--rosa)}
+.caso{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+.caso .body{padding:16px}
+.caso h3{margin:0 0 6px;font-family:VT323,monospace;font-weight:400;font-size:2.2rem;text-transform:uppercase}
+.caso img,.caso video{width:100%;display:block;background:var(--gris);border:2px solid var(--tinta)}
+.caso video{aspect-ratio:9/16;max-height:520px;object-fit:cover;margin:0 auto}
+.tag{display:inline-block;font-family:VT323,monospace;font-size:1.3rem;padding:0 12px;border-radius:20px;margin-bottom:8px;background:var(--verde)}
+.globo{background:var(--amarillo);border-radius:16px;padding:10px 16px;margin:10px 0 0;font-size:.95rem}
+.btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.btn{font-family:VT323,monospace;font-size:1.4rem;color:#fff;background:linear-gradient(#4a4aff,var(--azul));padding:2px 24px;border-radius:24px;text-decoration:none}
+.btn:hover{background:var(--naranja)}
+.galeria{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+/* contacto */
+.contacto{text-align:center}
+.contacto h2{color:var(--naranja);text-shadow:2px 2px 0 #fff}
+.pill{display:block;width:fit-content;margin:12px auto 0;padding:6px 28px;border-radius:30px;font-family:VT323,monospace;font-size:1.6rem;color:#fff;text-decoration:none;background:var(--rojo)}
+.pill.mail{background:var(--rosa);color:var(--tinta)}
+.pill:hover{outline:3px solid var(--amarillo)}
+/* barra de tareas */
+.barra{position:fixed;inset:auto 0 0 0;background:var(--gris);border-top:2px solid #fff;display:flex;gap:6px;align-items:center;padding:6px 8px;z-index:9;overflow-x:auto}
+.barra a{font-family:VT323,monospace;font-size:1.3rem;text-decoration:none;color:var(--tinta);padding:0 14px;border:2px solid;border-color:#fff #404040 #404040 #fff;white-space:nowrap}
+.barra a:first-child{font-weight:700;border-width:3px}
+.barra a:hover{background:var(--amarillo)}
+@media(max-width:720px){.sobre .body,.cols,.caso{grid-template-columns:1fr}.foto{max-width:260px;margin:auto}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+.full .body{padding:16px}.full h3{margin:0 0 6px;font-family:VT323,monospace;font-weight:400;font-size:2.2rem;text-transform:uppercase}
+.full video,.full .news{display:block;width:100%;background:var(--tinta);border:2px solid var(--tinta)}
+.vgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.vgrid video,video.tall{aspect-ratio:9/16;object-fit:cover}
+video.tall{max-width:320px;max-height:560px;margin:12px auto 0}
+video.wide{aspect-ratio:16/9;object-fit:contain}
+.caso a img{border:2px solid var(--tinta);display:block;width:100%;height:auto;background:var(--gris)}
+.etapa{display:grid;grid-template-columns:72px 1fr;gap:16px;margin-top:28px;padding-top:20px;border-top:3px dashed var(--azul)}
+.etapa .num{font-family:VT323,monospace;font-size:3.6rem;line-height:.8;color:var(--rosa);-webkit-text-stroke:2px var(--tinta)}
+.etapa h4{margin:0 0 6px;font-family:VT323,monospace;font-weight:400;font-size:2rem;text-transform:uppercase;color:var(--azul)}
+.galeria.g4{grid-template-columns:repeat(2,1fr)}.galeria img{width:100%;border:2px solid var(--tinta)}
+.news{max-width:340px;margin:12px auto 0}
+.dos{display:grid;grid-template-columns:1fr 1fr;gap:12px}.dos figure{margin:0}
+figcaption{font-family:VT323,monospace;font-size:1.2rem;margin-top:4px}
+.contacto{position:relative;overflow:hidden;padding:72px 16px;border:2px solid var(--tinta)}
+.contacto .fondo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.contacto::after{content:"";position:absolute;inset:0;background:rgba(20,18,31,.45)}
+.contacto .in{position:relative;z-index:1}
+.contacto h2{color:#fff;text-shadow:3px 3px 0 var(--naranja)}
+@media(max-width:720px){.vgrid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory}.vgrid video{flex:0 0 70%;scroll-snap-align:start}.etapa{grid-template-columns:1fr}.dos{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.contacto .fondo{display:none}.contacto{background:var(--tinta)}}
+
+
+/* HOME estilo 3DS */
+.win>header{gap:6px}.win>header span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.win>header i{flex:none}
+main>*,.hero .body,.home,.h-stage>*{min-width:0}
+.home{max-width:860px;margin:20px auto 0;text-align:left;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 0 0 3px var(--azul),5px 5px 0 rgba(0,0,0,.3)}
+.home [hidden]{display:none!important}
+.h-bar{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:2px 12px;background:linear-gradient(#fff,#d6e8fb);border-bottom:2px solid #8fb8e8;color:var(--azul);font-size:1.3rem}
+.h-app{display:flex;align-items:center;gap:8px}.h-dot{width:10px;height:10px;border-radius:50%;background:#38b6ff;box-shadow:0 0 6px #38b6ff}
+.h-sys{display:flex;align-items:center;gap:8px}.h-sys b{font-weight:400}
+.sig{display:flex;align-items:flex-end;gap:2px;height:14px}.sig i{width:3px;background:var(--azul);border-radius:1px}.sig i:nth-child(1){height:4px}.sig i:nth-child(2){height:7px}.sig i:nth-child(3){height:10px}.sig i:nth-child(4){height:13px}
+.bat{width:24px;height:12px;border:2px solid var(--azul);border-radius:3px;padding:1px;position:relative}.bat i{display:block;height:100%;width:80%;background:#38b6ff}.bat::after{content:"";position:absolute;right:-5px;top:2px;width:3px;height:4px;background:var(--azul)}
+#h-note{animation:nota 1s infinite alternate}@keyframes nota{to{transform:translateY(-3px)}}
+.h-stage{display:grid;grid-template-columns:1.15fr 1fr;min-height:340px}
+.h-visor{position:relative;overflow:hidden;cursor:grab;min-height:340px;touch-action:pan-y}.h-visor:active{cursor:grabbing}
+.h-visor canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.bg{position:absolute;inset:0;opacity:0;transition:opacity .6s}.bg.on{opacity:1}
+.bg[data-m=perfil]{background:linear-gradient(#8fb8e8,#e8f3ff)}
+.bg[data-m=musica]{background:radial-gradient(circle at 50% 70%,#fff,#9fd4ff 60%,#38b6ff)}
+.bg[data-m=pokemon]{background:radial-gradient(circle at 50% 55%,#fff 0 22%,#cfe3f7 23% 45%,#8fb8e8 46%)}
+.bg[data-m=rave]{background:linear-gradient(#05002e,#1a00d4 70%,#0a5fd6)}
+.bg[data-m=gaming]{background:repeating-linear-gradient(0deg,rgba(255,255,255,.12) 0 1px,transparent 1px 26px),repeating-linear-gradient(90deg,rgba(255,255,255,.12) 0 1px,transparent 1px 26px),linear-gradient(135deg,#1a00d4,#38b6ff)}
+.h-card{padding:14px;background:linear-gradient(#f7f7f7,#e3effc);border-left:2px solid #8fb8e8;display:flex;flex-direction:column;justify-content:center}
+.h-card section{animation:none}.h-card section.in{animation:hin .35s ease-out}@keyframes hin{from{opacity:0;transform:translateX(12px)}}
+.h-card h3{margin:0 0 8px;font-family:VT323,monospace;font-weight:400;font-size:1.9rem;line-height:1;color:var(--azul);text-transform:uppercase}
+.h-card p{margin:8px 0;font-size:.92rem}.h-card .globo{margin:6px 0}.hint{font-size:.8rem!important;color:#46526b}
+.cbtn{width:42px;height:42px;border-radius:50%;border:2px solid var(--azul);background:linear-gradient(#fff,#8fd0ff);color:var(--azul);font-size:1rem;cursor:pointer;flex:none}
+.cbtn.big{width:54px;height:54px;font-size:1.2rem}.cbtn:hover{background:linear-gradient(#fff,#38b6ff)}.cbtn:active{transform:scale(.94)}
+.p-title{font-size:1.7rem;color:var(--azul);text-transform:uppercase}.p-art{font-size:.78rem;color:#46526b;margin-bottom:6px}
+#p-viz{width:100%;height:56px;background:#eaf4ff;border:2px solid var(--azul);border-radius:8px;display:block}
+.p-bar{height:10px;margin-top:8px;background:#cfe3f7;border:2px solid var(--azul);border-radius:8px;overflow:hidden}.p-bar i{display:block;height:100%;width:0;background:linear-gradient(#38b6ff,var(--azul))}
+.p-time{font-size:1.1rem;text-align:right;color:var(--azul)}.p-ctrls{display:flex;justify-content:center;align-items:center;gap:12px}
+.trainer{margin:0 0 6px!important}.stats{display:grid;gap:8px}
+.stat{display:grid;grid-template-columns:1fr auto;gap:0 6px;font-size:1.15rem;color:var(--azul)}.stat b{font-weight:400}.meter{grid-column:1/-1;height:12px;border:2px solid var(--azul);border-radius:8px;background:#cfe3f7;overflow:hidden}
+.meter i{display:block;height:100%;width:var(--v);background:linear-gradient(90deg,#38b6ff,var(--azul))}
+.h-card section.in .meter i{animation:fill .9s ease-out both}@keyframes fill{from{width:0}}
+.game{display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:center}.g-title{font-size:1.7rem;line-height:1;color:var(--azul);text-transform:uppercase}.g-count{font-size:1.1rem;color:#46526b}
+.h-dock{display:flex;gap:8px;padding:12px 10px 12px;background:linear-gradient(#e3effc,#cfe3f7);border-top:2px solid #8fb8e8;overflow-x:auto}
+.h-dock>:first-child{margin-left:auto}.h-dock>:last-child{margin-right:auto}
+.slot{flex:0 0 auto;width:76px;height:76px;border-radius:16px;border:2px solid #fff;background:linear-gradient(#fff 0,#dbeeff 48%,#a6dcff 52%,#d8ecff 100%);box-shadow:0 2px 0 #8fb8e8,0 0 0 1px #8fb8e8;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--azul);cursor:pointer;font:inherit;text-decoration:none;transition:transform .2s,box-shadow .2s}
+.slot .ic{font-size:1.7rem;line-height:1.1}.slot .lb{font-size:1rem;letter-spacing:0}
+.slot:hover{transform:translateY(-2px)}.slot.on{transform:translateY(-4px) scale(1.1);box-shadow:0 0 0 3px var(--azul),0 0 14px 4px #38b6ff}
+.slot.go{width:auto;padding:0 18px;color:#fff;background:linear-gradient(#4a4aff,var(--azul));font-size:1.3rem}.slot.go:hover{background:var(--naranja)}
+.ic.pb{width:28px;height:28px;border-radius:50%;border:2px solid var(--tinta);background:linear-gradient(#e8202a 46%,var(--tinta) 46% 56%,#fff 56%);position:relative;display:block}
+.ic.pb::after{content:"";position:absolute;left:50%;top:50%;width:8px;height:8px;margin:-5px 0 0 -5px;border-radius:50%;background:#fff;border:2px solid var(--tinta)}
+@media(max-width:720px){.h-stage{grid-template-columns:1fr}.h-visor{min-height:300px}.h-card{border-left:0;border-top:2px solid #8fb8e8}.h-dock{justify-content:flex-start}}
+@media(prefers-reduced-motion:reduce){.bg,.slot{transition:none}.h-card section.in,.h-card section.in .meter i,#h-note{animation:none}}
+</style>
+</head>
+<body>
+<main>
+
+<section class="win hero" id="inicio" aria-labelledby="t-inicio">
+ <header><span>tomas_estevez_portfolio.file</span><i aria-hidden="true"><b></b><b></b><b></b></i></header>
+ <div class="body">
+  <h1 class="px" id="t-inicio"><span class="a"><span class="cursiva">P</span></span>ORT<br><span class="b">FOL</span><span class="c">IO</span></h1>
+  <p>Tomás Estévez. Estudiante de Diseño Multimedial en la UNLP: UI/UX, edición de video, motion graphics y animación.</p>
+  <div class="home" id="home" data-mode="perfil">
+   <div class="h-bar px">
+    <span class="h-app"><i class="h-dot" aria-hidden="true"></i><span id="h-app">Perfil</span></span>
+    <span class="h-sys"><span id="h-note" hidden aria-label="Reproduciendo música">♪</span><span class="sig" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="bat" aria-hidden="true"><i></i></span><b id="h-clock">--:--</b></span>
+   </div>
+   <div class="h-stage">
+    <div class="h-visor" id="visor" role="button" tabindex="0" aria-label="Personaje 3D interactivo: el cursor lo hace mirar, arrastrá para girarlo, clic o Enter para que salte">
+     <span class="bg on" data-m="perfil"></span><span class="bg" data-m="musica"></span><span class="bg" data-m="pokemon"></span><span class="bg" data-m="rave"></span><span class="bg" data-m="gaming"></span>
+    </div>
+    <div class="h-card" aria-live="polite">
+     <section data-card="perfil"><h3 class="px">Perfil</h3>
+      <p class="globo"><strong>Tomás Estévez</strong> — Estudiante de Diseño Multimedial, UNLP.</p>
+      <p class="hint">Mové el cursor, arrastrame para girarme o hacé clic para que salte. Elegí un modo abajo.</p></section>
+     <section data-card="musica" hidden><h3 class="px">Sound</h3>
+      <div class="player">
+       <div class="p-title px" id="p-title">Disco Pulse</div><div class="p-art" id="p-art"></div>
+       <canvas id="p-viz" width="300" height="56" aria-hidden="true"></canvas>
+       <div class="p-bar" aria-hidden="true"><i id="p-bar"></i></div><div class="p-time px" id="p-time">0:00 / 0:00</div>
+       <div class="p-ctrls"><button class="cbtn" id="p-prev" aria-label="Anterior">⏮</button><button class="cbtn big" id="p-play" aria-label="Reproducir">▶</button><button class="cbtn" id="p-next" aria-label="Siguiente">⏭</button></div>
+       <p class="hint">Temas originales sintetizados en el navegador, inspirados en pop disco y K-pop.</p>
+      </div></section>
+     <section data-card="pokemon" hidden><h3 class="px">Ficha de entrenador</h3>
+      <p class="trainer"><strong>Tomás E.</strong> · Tipo Multimedia</p>
+      <div class="stats">
+       <div class="stat"><span class="px">Motion &amp; Visual</span><b class="px">90</b><div class="meter"><i style="--v:90%"></i></div></div>
+       <div class="stat"><span class="px">Edición &amp; Video</span><b class="px">85</b><div class="meter"><i style="--v:85%"></i></div></div>
+       <div class="stat"><span class="px">Diseño UX/UI</span><b class="px">80</b><div class="meter"><i style="--v:80%"></i></div></div>
+       <div class="stat"><span class="px">Código Creativo</span><b class="px">75</b><div class="meter"><i style="--v:75%"></i></div></div>
+      </div>
+      <p class="hint"><strong>Habilidad pasiva:</strong> Modo Nocturno.</p></section>
+     <section data-card="rave" hidden><h3 class="px">Rave / VJ</h3>
+      <p>Me gustan las raves y la electrónica, y los visuales en vivo que respiran con el sonido. Los armo con TouchDesigner: luz, ritmo e imagen reaccionando al instante.</p>
+      <p class="hint">Mové el cursor sobre el visor: las ondas te siguen. Si activás el sonido en Música, también bailan con el ritmo.</p></section>
+     <section data-card="gaming" hidden tabindex="0" aria-label="Juegos favoritos, usá las flechas izquierda y derecha"><h3 class="px">Favoritos</h3>
+      <div class="game"><button class="cbtn" id="g-prev" aria-label="Juego anterior">◀</button><div><div class="px g-title" id="g-title"></div><div class="g-count px" id="g-count"></div></div><button class="cbtn" id="g-next" aria-label="Juego siguiente">▶</button></div>
+      <p class="globo" id="g-desc"></p></section>
+    </div>
+   </div>
+   <nav class="h-dock" aria-label="Menú HOME">
+    <button class="slot on" data-m="perfil" aria-pressed="true"><span class="ic">🙂</span><span class="px lb">Perfil</span></button>
+    <button class="slot" data-m="musica" aria-pressed="false"><span class="ic">🎧</span><span class="px lb">Música</span></button>
+    <button class="slot" data-m="pokemon" aria-pressed="false"><span class="ic pb"></span><span class="px lb">Pokémon</span></button>
+    <button class="slot" data-m="rave" aria-pressed="false"><span class="ic">🎛️</span><span class="px lb">Rave/VJ</span></button>
+    <button class="slot" data-m="gaming" aria-pressed="false"><span class="ic">🎮</span><span class="px lb">Gaming</span></button>
+    <a class="slot go" href="#proyectos"><span class="px lb">Ver proyectos ↓</span></a>
+   </nav>
+  </div>
+  <nav class="iconos" aria-label="Secciones">
+   <a href="#sobre-mi">Sobre mí</a><a href="#educacion">Educación</a><a href="#proyectos">Proyectos</a><a href="#contacto">Contacto</a>
+  </nav>
+ </div>
+</section>
+
+<section class="win sobre" id="sobre-mi" aria-labelledby="t-sobre">
+ <header><span>sobre_mi.exe</span><i aria-hidden="true"><b></b><b></b><b></b></i></header>
+ <div class="body">
+  <div class="foto">
+   <img src="images/tomas.webp" alt="Retrato de Tomás Estévez con gorra azul" width="638" height="905">
+   <span class="chip t">Tomás</span><span class="chip e">Estévez</span>
+  </div>
+  <div>
+   <h2 class="px" id="t-sobre"><span class="cursiva">S</span>obre mí</h2>
+   <ul class="verdes" style="margin-top:16px">
+    <li>Estudiante de Diseño Multimedial en la UNLP, dando mis primeros pasos en proyectos digitales.</li>
+    <li>Tengo facilidad tecnológica, lo que me permite resolver problemas técnicos de manera efectiva.</li>
+    <li>Busco aportar mis conocimientos en edición de video, motion graphics y diseño para seguir aprendiendo en la práctica.</li>
+   </ul>
+  </div>
+ </div>
+</section>
+
+<section class="win edu" id="educacion" aria-labelledby="t-edu">
+ <header><span>fundamentos_creativos.doc</span><i aria-hidden="true"><b></b><b></b><b></b></i></header>
+ <div class="body">
+  <h2 class="px" id="t-edu"><span class="cursiva">F</span>undamentos <span class="cursiva">C</span>reativos</h2>
+  <p class="cinta">Licenciatura en Diseño Multimedial, Facultad de Artes, UNLP — 2023 a la actualidad</p>
+  <div class="cols">
+   <div class="win"><div class="body"><h3>Habilidades</h3>
+    <ul><li>Motion graphics</li><li>Diseño UX/UI</li><li>Edición de video</li><li>Estética visual</li><li>Diseño gráfico</li></ul></div></div>
+   <div class="win"><div class="body"><h3>Herramientas</h3>
+    <ul class="logos"><li><img src="images/logos/photoshop.png" alt="" width="56" height="56">Photoshop</li><li><img src="images/logos/figma.png" alt="" width="56" height="56">Figma</li><li><img src="images/logos/illustrator.png" alt="" width="56" height="56">Illustrator</li><li><img src="images/logos/canva.png" alt="" width="56" height="56">Canva</li><li><img src="images/logos/after-effects.png" alt="" width="56" height="56">After Effects</li><li><img src="images/logos/capcut.png" alt="" width="56" height="56">CapCut</li></ul></div></div>
+  </div>
+ </div>
+</section>
+
+<section class="proy" id="proyectos" aria-labelledby="t-proy">
+ <div class="proy-head"><h2 class="px" id="t-proy"><span class="cursiva">P</span>royectos <span class="cursiva">D</span>estacados</h2></div>
+
+ <article class="caso">
+  <div class="win"><header><span>filo_news.fig</span><i aria-hidden="true"><b></b><b></b><b></b></i></header>
+   <div class="body">
+    <span class="tag">UI/UX</span>
+    <h3 style="color:var(--rojo)">Rediseño Filo News</h3>
+    <p class="globo">Rediseño de la sección de música de Filo News, enfocado en que los usuarios descubran playlists sin vueltas y con alto impacto visual.</p>
+    <p>Nació a partir de un estudio de usuarios. Adapté la interfaz para mobile y desktop, con una arquitectura y jerarquías pensadas para conectar al público joven con las tendencias musicales de forma directa y dinámica.</p>
+    <div class="btns">
+     <a class="btn" href="#" target="_blank" rel="noopener">Ver prototipo</a>
+     <a class="btn" href="#" target="_blank" rel="noopener">Ver memoria</a>
+    </div>
+   </div></div>
+  <a href="images/mockup-desktop.png" target="_blank" rel="noopener" aria-label="Ver el mockup desktop completo"><img src="images/filo-news.jpg" alt="Mockup desktop de Tu Radar Musical, rediseño de Filo News: hero con playlist personalizada, moods y formulario" width="1000" height="1500" loading="lazy"></a>
+ </article>
+
+ <article class="full win"><header><span>edicion_de_video.mp4</span><i aria-hidden="true"><b></b><b></b><b></b></i></header>
+  <div class="body"><span class="tag">Video</span><h3 style="color:var(--azul)">Edición de video</h3>
+   <div class="vgrid"><video controls preload="metadata" playsinline src="videos/video1.mp4"></video><video controls preload="metadata" playsinline src="videos/video2.mp4"></video><video controls preload="metadata" playsinline src="videos/video3.mp4"></video></div></div></article>
+
+ <article class="full win"><header><span>edicion_de_reels.mp4</span><i aria-hidden="true"><b></b><b></b><b></b></i></header>
+  <div class="body"><span class="tag">Reels</span><h3 style="color:var(--naranja)">Edición de reels</h3>
+   <div class="vgrid"><video controls preload="metadata" playsinline src="videos/reel1.mp4"></video><video controls preload="metadata" playsinline src="videos/reel2.mp4"></video><video controls preload="metadata" playsinline src="videos/reel3.mp4"></video></div></div></article>
+
+ <article class="full win"><header><span>animacion.mp4</span><i aria-hidden="true"><b></b><b></b><b></b></i></header>
+  <div class="body"><span class="tag">Motion</span><h3 style="color:#0a9a25">Animación</h3>
+   <video class="wide" controls preload="metadata" playsinline src="videos/animacion.mp4"></video></div></article>
+
+ <article class="full win" id="vagari"><header><span>vagari.ai</span><i aria-hidden="true"><b></b><b></b><b></b></i></header>
+  <div class="body"><span class="tag">Proyecto creativo</span><h3 style="color:var(--naranja)">Vagari: del branding a la instalación</h3>
+   <p class="globo">Un universo onírico que nació como branding y terminó convertido en una instalación física con visuales interactivos.</p>
+   <p>Vagari es el portal de Oniria, un universo donde el valor está en los sueños. Sus habitantes son nómades que viajan entre mundos soñados: acceden a un prado onírico donde los espera una puerta cerrada en medio del pastizal. No tiene llave convencional: se abre combinando símbolos. El proyecto avanzó en tres etapas.</p>
+
+   <div class="etapa"><span class="num">01</span><div>
+    <h4>Branding</h4>
+    <p>Definimos el nombre, la narrativa y la personalidad de Vagari (el arquetipo del explorador), con un tono de voz misterioso, enigmático y dinámico. Armamos la identidad visual (paleta de verde, rosa, azul, negro y blanco; Naive Font para títulos y Montserrat para textos), un sistema de símbolos para configurar la puerta y una experiencia pensada para los cuatro sentidos: paisaje sonoro, aromas vegetales, texturas y sabores. Todo quedó reunido en el manual de marca.</p>
+    <div class="galeria g4">
+     <img src="images/vagari-1.jpg" alt="Portada de Vagari: logotipo cromado sobre un pastizal" loading="lazy">
+     <img src="images/vagari-2.jpg" alt="Sistema de símbolos de Vagari: elementos, estado, momentos del día y color" loading="lazy">
+     <img src="images/vagari-3.jpg" alt="Paleta de color de Vagari: verde, rosa, azul, negro y blanco" loading="lazy">
+     <img src="images/vagari-4.jpg" alt="Tipografía Naive Font usada en los títulos de Vagari" loading="lazy">
+    </div>
+    <div class="btns"><a class="btn" href="docs/branding.pdf" target="_blank" rel="noopener">Ver manual de marca</a></div>
+    <p class="globo">Newsletter: quienes dejaban sus datos al comprar un llavero recibían esta bienvenida, escrita con el tono de la marca.</p>
+    <img class="news" src="images/newsletter-1.jpg" alt="Newsletter de Vagari: portada con una puerta en un prado, texto de bienvenida y botón Registrarme" loading="lazy">
+   </div></div>
+
+   <div class="etapa"><span class="num">02</span><div>
+    <h4>Transmedia</h4>
+    <p>Llevamos el universo fuera de la pantalla: llaveros y mapas con símbolos, búsqueda de pistas por la ciudad y una pieza de realidad aumentada donde los conceptos del branding se materializan.</p>
+    <video class="tall" controls preload="metadata" playsinline src="videos/realidad_aumentada.mp4"></video>
+   </div></div>
+
+   <div class="etapa"><span class="num">03</span><div>
+    <h4>Instalación final</h4>
+    <p>El cierre del proyecto: una instalación física donde el universo se podía recorrer. Hice con TouchDesigner los visuales interactivos que respondían al público y los visuales que se proyectaron en una tele dentro de la misma instalación.</p>
+    <div class="dos">
+     <figure><video class="wide" controls preload="metadata" playsinline src="videos/visuales_interactivos.mp4"></video><figcaption>Visuales interactivos · TouchDesigner</figcaption></figure>
+     <figure><video class="wide" controls preload="metadata" playsinline src="videos/visuales_taller_tele.mp4"></video><figcaption>Visuales para la tele · TouchDesigner</figcaption></figure>
+    </div>
+   </div></div>
+  </div></article>
+</section>
+
+<section class="contacto" id="contacto" aria-labelledby="t-contacto">
+ <video class="fondo" autoplay muted loop playsinline aria-hidden="true" src="videos/final.mp4"></video>
+ <div class="in">
+  <h2 class="px" id="t-contacto"><span class="cursiva">D</span>isponible<br>para proyectos</h2>
+  <a class="pill mail" href="mailto:esteveztomii@gmail.com">esteveztomii@gmail.com</a>
+  <a class="pill" href="https://wa.me/5491135643671">+54 9 11 3564-1671</a>
+ </div>
+</section>
+
+</main>
+
+<nav class="barra" aria-label="Barra de tareas">
+ <a href="#inicio">Start</a><a href="#sobre-mi">Sobre mí</a><a href="#educacion">Educación</a><a href="#proyectos">Proyectos</a><a href="#contacto">Contacto</a>
+</nav>
+<script src="js/three.min.js"></script>
+<script src="js/home.js"></script>
+</body>
+</html>

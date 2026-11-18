@@ -1,7 +1,7 @@
-/* HERO · Game Boy 3D (three.js r128 + GLTFLoader)
-   La pantallita del Game Boy replica la interfaz de la 3DS: menú de secciones, ventana de diálogo
-   y un mini Tomás en pixel art. Editá SEC para cambiar los textos.
-   Se maneja tocando la pantalla, con la cruz / A / B / SELECT / START del modelo, o con el teclado. */
+/* HERO · Game Boy Color 3D (three.js r128 + GLTFLoader)
+   La pantallita funciona como una GBC de verdad: menú de íconos, páginas con tu foto "vista desde la consola",
+   música (sintetizador propio), visuales, juegos favoritos y stats. Se maneja tocando la pantalla,
+   con la cruz / A / B / SELECT / START del modelo, o con el teclado. */
 (function () {
   'use strict';
   var root = document.getElementById('home');
@@ -11,196 +11,302 @@
   var dirty = true;
   function markDirty() { dirty = true; }
 
-  /* ---------- contenido ---------- */
-  var SEC = [
-    { k: 'Sobre mí', id: 'sobre-mi', t: 'Estudiante de Diseño Multimedial en la UNLP, dando mis primeros pasos en proyectos digitales. Edición de video, motion graphics y diseño.' },
-    { k: 'Educación', id: 'educacion', t: 'Licenciatura en Diseño Multimedial, Facultad de Artes, UNLP (2023 a la actualidad). Photoshop, Figma, Illustrator, Canva, After Effects y CapCut.' },
-    { k: 'Proyectos', id: 'proyectos', t: 'Rediseño Filo News (UI/UX), Vagari (identidad y experiencia VR), edición de video y reels, y animación.' },
-    { k: 'Contacto', id: 'contacto', t: 'Disponible para proyectos. esteveztomii@gmail.com · +54 9 11 3564-1671' }
+  /* ---------- audio: sintetizador propio (sin archivos, sin copyright) ---------- */
+  var TRACKS = [
+    { n: 'Disco Pulse', a: 'Inspirado en pop disco · original', bpm: 116, root: 45, prog: [[0, 'm'], [-4, 'M'], [3, 'M'], [-2, 'M']], lead: 'triangle' },
+    { n: 'Neon Idol', a: 'Inspirado en K-pop dance · original', bpm: 128, root: 50, prog: [[0, 'M'], [7, 'M'], [9, 'm'], [5, 'M']], lead: 'square' },
+    { n: 'Night Drive', a: 'Synthwave suave · original', bpm: 100, root: 52, prog: [[0, 'm'], [8, 'M'], [3, 'M'], [10, 'M']], lead: 'sawtooth' }
   ];
-  var TAB = ['#ffb3c6', '#a9e0ff', '#c3f0a4', '#ffd27a'], ICO = ['#e8605a', '#29c5f6', '#6bbf3a', '#ff8c4a'];
+  var AU = { ctx: null, an: null, data: null, buf: null, bassF: null, out: null, playing: false, idx: 0, step: 0, next: 0, timer: 0 };
+  var hz = function (m) { return 440 * Math.pow(2, (m - 69) / 12); };
+  function osc(type, f, t0, dur, vol, dest) {
+    var c = AU.ctx, o = c.createOscillator(), g2 = c.createGain();
+    o.type = type; o.frequency.value = f;
+    g2.gain.setValueAtTime(0.0001, t0); g2.gain.linearRampToValueAtTime(vol, t0 + 0.01); g2.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    o.connect(g2); g2.connect(dest || AU.out); o.start(t0); o.stop(t0 + dur + 0.05);
+  }
+  function kick(t0) {
+    var c = AU.ctx, o = c.createOscillator(), g2 = c.createGain();
+    o.frequency.setValueAtTime(150, t0); o.frequency.exponentialRampToValueAtTime(42, t0 + 0.12);
+    g2.gain.setValueAtTime(0.9, t0); g2.gain.exponentialRampToValueAtTime(0.001, t0 + 0.26);
+    o.connect(g2); g2.connect(AU.out); o.start(t0); o.stop(t0 + 0.3);
+  }
+  function noise(t0, dur, vol, type, f) {
+    var c = AU.ctx, s = c.createBufferSource(), fl = c.createBiquadFilter(), g2 = c.createGain();
+    s.buffer = AU.buf; fl.type = type; fl.frequency.value = f;
+    g2.gain.setValueAtTime(vol, t0); g2.gain.exponentialRampToValueAtTime(0.001, t0 + dur);
+    s.connect(fl); fl.connect(g2); g2.connect(AU.out); s.start(t0, Math.random() * 0.5); s.stop(t0 + dur + 0.02);
+  }
+  var ARP = [0, 1, 2, 1, 3, 2, 1, 2];
+  function playStep(tr, s, t0) {
+    var bar = (s >> 4) & 3, st = s & 15, ch = tr.prog[bar], q = ch[1] === 'm' ? 3 : 4, base = tr.root + ch[0], sp = 60 / tr.bpm / 4;
+    if (st % 4 === 0) kick(t0);
+    if (st === 4 || st === 12) noise(t0, 0.14, 0.35, 'bandpass', 1800);
+    if (st % 4 === 2) noise(t0, 0.06, 0.18, 'highpass', 7000); else if (st % 2) noise(t0, 0.03, 0.06, 'highpass', 8000);
+    if (st === 0 || st === 3 || st === 6 || st === 10 || st === 14) osc('sawtooth', hz(base), t0, sp * 2.2, 0.32, AU.bassF);
+    if (st % 2 === 0) { var iv = [0, q, 7, 12][ARP[(st >> 1) % 8] % 4]; osc(tr.lead, hz(base + 24 + iv), t0, sp * 1.8, 0.09); }
+    if (st === 0) [0, q, 7].forEach(function (i) { osc('sine', hz(base + 12 + i), t0, sp * 15, 0.05); });
+  }
+  function sched() {
+    if (!AU.playing) return;
+    var tr = TRACKS[AU.idx], sp = 60 / tr.bpm / 4;
+    while (AU.next < AU.ctx.currentTime + 0.15) {
+      playStep(tr, AU.step, AU.next); AU.next += sp; AU.step++;
+      if (AU.step >= 256) { AU.step = 0; AU.idx = (AU.idx + 1) % TRACKS.length; tr = TRACKS[AU.idx]; sp = 60 / tr.bpm / 4; markDirty(); announce(); }
+    }
+  }
+  function initAudio() {
+    var AC = window.AudioContext || window.webkitAudioContext; if (!AC) return false;
+    var c = AU.ctx = new AC();
+    AU.buf = c.createBuffer(1, c.sampleRate, c.sampleRate);
+    var d = AU.buf.getChannelData(0); for (var i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    var master = c.createGain(); master.gain.value = 0.3;
+    AU.an = c.createAnalyser(); AU.an.fftSize = 128; AU.data = new Uint8Array(AU.an.frequencyBinCount);
+    master.connect(AU.an); AU.an.connect(c.destination); AU.out = master;
+    AU.bassF = c.createBiquadFilter(); AU.bassF.type = 'lowpass'; AU.bassF.frequency.value = 420; AU.bassF.connect(master);
+    AU.timer = setInterval(sched, 25);
+    return true;
+  }
+  function play() { if (!AU.ctx && !initAudio()) return; AU.ctx.resume(); if (!AU.playing) { AU.playing = true; AU.next = AU.ctx.currentTime + 0.06; } markDirty(); }
+  function pause() { if (!AU.ctx) return; AU.playing = false; AU.ctx.suspend(); markDirty(); }
+  function go(d) { AU.idx = (AU.idx + d + TRACKS.length) % TRACKS.length; AU.step = 0; if (AU.ctx) AU.next = AU.ctx.currentTime + 0.06; markDirty(); if (!AU.playing) play(); }
+  var fmt = function (s) { s = Math.floor(s); return Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2); };
+
+  /* ---------- contenido ---------- */
+  var MENU = [ // el nombre sólo lo lee el lector de pantalla: en pantalla van íconos
+    ['Perfil', 'perfil'], ['Stats', 'stats'], ['Música', 'musica'], ['Visuales', 'rave'], ['Juegos', 'juegos'], ['Proyectos', 'proyectos']
+  ];
+  var GAMES = [
+    ['Resident Evil', 'Atmósfera, tensión y diseño sonoro.'],
+    ['Marvel Rivals', 'Dinamismo, diseño de personajes y ritmo visual.'],
+    ['The Walking Dead (Telltale)', 'Narrativa interactiva y peso de las decisiones.'],
+    ['Life is Strange', 'Estética indie, nostalgia y banda sonora.']
+  ];
+  var STATS = [['Motion & Visual', 90], ['Edición & Video', 85], ['Diseño UX/UI', 80], ['Código Creativo', 75]];
+  var T_PERFIL = 'Estudiante de Diseño Multimedial en la UNLP, dando mis primeros pasos en proyectos digitales.';
+  var T_RAVE = 'Me gustan las raves y la electrónica, y los visuales en vivo que respiran con el sonido. Los armo con TouchDesigner.';
+  var ST = { page: 'home', sel: 0, game: 0, t0: 0 };
 
   /* ---------- pantalla (canvas lógico 160×144, dibujado a 2x) ---------- */
   var LW = 160, LH = 144, K = 2;
   var scr = document.createElement('canvas'); scr.width = LW * K; scr.height = LH * K;
   var g = scr.getContext('2d');
-  var P = { cream: '#fff8e5', line: '#c9a090', ink: '#5a3a2a', red: '#e8605a', cyan: '#29c5f6', org: '#ff8c4a', yel: '#ffe45e', grn: '#6bbf3a' };
+  var C = { bg: '#e9f1f7', ink: '#181830', mid: '#5b6b8c', lt: '#b9c8de', wh: '#ffffff', blue: '#2850c8', red: '#d83828', grn: '#28a038', yel: '#f8c820', pink: '#f878a8', cy: '#38c8f0', skin: '#d9a066', hair: '#1c1512' };
   var FONT = 'VT323, monospace';
   function R(x, y, w, h, c) { g.fillStyle = c; g.fillRect(x, y, w, h); }
-  function ell(cx, cy, rx, ry, c) { // elipse en píxeles
+  function ell(cx, cy, rx, ry, c) {
     g.fillStyle = c;
     for (var dy = -ry; dy <= ry; dy++) { var hw = Math.round(rx * Math.sqrt(Math.max(0, 1 - (dy * dy) / (ry * ry + .01)))); g.fillRect(cx - hw, cy + dy, hw * 2 + 1, 1); }
   }
-  function txt(s, x, y, col, px, al) { g.font = px + 'px ' + FONT; g.fillStyle = col; g.textAlign = al || 'left'; g.textBaseline = 'alphabetic'; g.fillText(s, x, y); }
-  function box(x, y, w, h, fill) { R(x - 1, y - 1, w + 2, h + 2, P.line); R(x, y, w, h, fill); }
+  function txt(s, x, y, col, px, al) { // texto "grueso" estilo GBC
+    g.font = px + 'px ' + FONT; g.fillStyle = col; g.textAlign = al || 'left'; g.textBaseline = 'alphabetic';
+    g.fillText(s, x, y); g.fillText(s, x + 0.5, y);
+  }
+  function panel(x, y, w, h, fill, bord) { // caja con borde de 2px y esquinas cortadas
+    bord = bord || C.ink;
+    R(x + 1, y, w - 2, h, bord); R(x, y + 1, w, h - 2, bord);
+    R(x + 2, y + 1, w - 4, h - 2, fill); R(x + 1, y + 2, w - 2, h - 4, fill);
+  }
   function wrap(s, w, px) {
     g.font = px + 'px ' + FONT; var out = [], l = '';
     s.split(' ').forEach(function (wd) { var t = l ? l + ' ' + wd : wd; if (g.measureText(t).width > w && l) { out.push(l); l = wd; } else l = t; });
     out.push(l); return out;
   }
-
-  /* ---------- mini Tomás (pixel art 40×55) ---------- */
-  var C = { hair: '#16110f', hair2: '#2e2622', skin: '#c98f5f', skinS: '#b57a4c', cheek: '#dc8a72', eye: '#1b1210', brow: '#2b1a12', gold: '#ffc933', silver: '#d3dbe6',
-    shirt: '#f6bd0f', shirtS: '#d99a00', shirtL: '#ffd84a', jean: '#4d78ac', jeanS: '#3b6196', jeanL: '#7ea3cf', thread: '#e8f0f8', shoe: '#18181f', sole: '#f4f4f4' };
+  function fit(s, w, px) { while (px > 8) { g.font = px + 'px ' + FONT; if (g.measureText(s).width <= w) break; px--; } return px; }
   var HEART = ['.XX.XX.', 'XXXXXXX', 'XXXXXXX', '.XXXXX.', '..XXX..', '...X...'];
-  function heart(x, y, c, s) { s = s || 1; HEART.forEach(function (r, j) { for (var i = 0; i < 7; i++) if (r[i] === 'X') R(x + i * s, y + j * s, s, s, c); }); }
-  function arm(sx, sy, dirx, th) { // brazo en bloques: manga, puño doblado, antebrazo y mano
-    var s = Math.sin(th), c = Math.cos(th);
-    for (var i = 0; i <= 11; i++) {
-      var px = sx + dirx * s * i, py = sy + c * i, col = i < 6 ? C.shirt : (i < 8 ? C.shirtS : C.skin), z = i < 8 ? 4 : (i < 11 ? 3 : 4);
-      R(Math.round(px - z / 2), Math.round(py - z / 2), z, z, col);
-    }
-  }
-  function drawTomas(ox, oy, p, blink, happy) {
-    g.save(); g.translate(Math.round(ox), Math.round(oy));
-    // pelo (atrás)
-    ell(20, 14, 13, 12, C.hair);
-    for (var k = 0; k < 16; k++) { var a = k * Math.PI / 8, sn = Math.sin(a); if (sn < .6) ell(20 + Math.round(13.5 * Math.cos(a)), 14 + Math.round(12.5 * sn), 3, 3, C.hair); }
-    [[14, 0, 3, 3], [19, -1, 3, 4], [25, 0, 3, 3], [10, 3, 2, 3], [30, 3, 2, 3]].forEach(function (t) { R(t[0], t[1], t[2], t[3], C.hair); });
-    ell(9, 22, 3, 4, C.hair); ell(32, 22, 3, 4, C.hair);
-    // piernas y zapatillas
-    R(13, 41, 15, 2, C.jean); R(13, 43, 7, 6, C.jean); R(21, 43, 7, 6, C.jean); R(18, 43, 1, 6, C.jeanS); R(27, 43, 1, 6, C.jeanS);
-    R(14, 45, 4, 2, C.skin); R(14, 44, 1, 1, C.thread); R(17, 47, 1, 1, C.thread); R(22, 46, 4, 2, C.skin); R(24, 45, 1, 1, C.thread); R(22, 48, 1, 1, C.thread);
-    R(12, 49, 8, 2, C.jeanL); R(21, 49, 8, 2, C.jeanL); R(12, 50, 8, 1, C.jeanS); R(21, 50, 8, 1, C.jeanS);
-    R(11, 51, 9, 3, C.shoe); R(21, 51, 9, 3, C.shoe); R(12, 52, 2, 1, '#3a3a46'); R(22, 52, 2, 1, '#3a3a46'); R(11, 54, 9, 1, C.sole); R(21, 54, 9, 1, C.sole);
-    // camisa
-    R(12, 29, 17, 12, C.shirt); R(11, 38, 19, 3, C.shirt); R(13, 31, 2, 8, C.shirtL); R(25, 31, 4, 9, C.shirtS); R(11, 40, 19, 1, C.shirtS);
-    R(16, 29, 3, 2, C.shirtS); R(22, 29, 3, 2, C.shirtS); R(20, 30, 1, 11, C.shirtS); R(20, 33, 1, 1, '#fff6c9'); R(20, 36, 1, 1, '#fff6c9'); R(20, 39, 1, 1, '#fff6c9');
-    // brazos (respiración profunda)
-    var th = .22 + 2.6 * p; arm(13, 31, -1, th); arm(28, 31, 1, th);
-    // cuello y cabeza
-    R(18, 26, 5, 4, C.skinS); ell(20, 19, 10, 8, C.skin);
-    R(9, 18, 2, 4, C.skinS); R(31, 18, 2, 4, C.skinS); R(9, 22, 1, 2, C.silver); R(32, 22, 1, 2, C.silver);
-    R(13, 22, 3, 2, C.cheek); R(26, 22, 3, 2, C.cheek);
-    if (blink) { R(14, 19, 3, 1, C.eye); R(25, 19, 3, 1, C.eye); }
-    else { R(14, 17, 3, 4, C.eye); R(25, 17, 3, 4, C.eye); R(14, 17, 1, 1, '#fff'); R(25, 17, 1, 1, '#fff'); }
-    R(13, 14, 5, 1, C.brow); R(14, 15, 3, 1, C.brow); R(24, 14, 5, 1, C.brow); R(25, 15, 3, 1, C.brow);
-    R(20, 21, 2, 1, C.skinS); R(22, 22, 1, 1, C.gold);
-    if (happy) { R(18, 24, 6, 2, '#7a2e2e'); R(20, 25, 2, 1, '#e0707a'); R(17, 23, 1, 1, '#7a3f2a'); R(24, 23, 1, 1, '#7a3f2a'); }
-    else { R(18, 24, 1, 1, '#7a3f2a'); R(19, 25, 4, 1, '#7a3f2a'); R(23, 24, 1, 1, '#7a3f2a'); }
-    // flequillo rizado
-    ell(14, 11, 5, 3, C.hair); ell(22, 10, 6, 3, C.hair); ell(28, 12, 4, 3, C.hair);
-    R(19, 12, 2, 3, C.hair); R(20, 14, 1, 2, C.hair); R(16, 13, 2, 2, C.hair); R(26, 13, 2, 2, C.hair);
-    [[13, 6], [18, 4], [24, 5], [28, 8], [11, 11], [31, 12], [20, 8]].forEach(function (h) { R(h[0], h[1], 2, 1, C.hair2); R(h[0] + 1, h[1] + 1, 1, 1, C.hair2); });
-    g.restore();
+  function heart(x, y, c) { HEART.forEach(function (r, j) { for (var i = 0; i < 7; i++) if (r[i] === 'X') R(x + i, y + j, 1, 1, c); }); }
+  function tri(x, y, w, h, dir, col) {
+    g.fillStyle = col; g.beginPath();
+    if (dir === 'r') { g.moveTo(x, y); g.lineTo(x, y + h); g.lineTo(x + w, y + h / 2); }
+    else if (dir === 'l') { g.moveTo(x + w, y); g.lineTo(x + w, y + h); g.lineTo(x, y + h / 2); }
+    else { g.moveTo(x, y); g.lineTo(x + w, y); g.lineTo(x + w / 2, y + h); }
+    g.closePath(); g.fill();
   }
 
-  /* ---------- escena superior y UI inferior ---------- */
-  var ST = { page: 'home', sel: 0, i: 0, f: 1, pages: [], pg: 0, tStart: 0, heart: false, jumpT: -9, happyT: -9 };
-  var GROUND = 48, FEET = 60;
-  function scene(now) {
-    var t = now / 1000, i, j;
-    var gr = g.createLinearGradient(0, 0, 0, GROUND); gr.addColorStop(0, '#8fd3ff'); gr.addColorStop(1, '#d9f3ff'); g.fillStyle = gr; g.fillRect(0, 0, LW, GROUND);
-    [[20, 10, 1], [78, 22, .8], [120, 6, 1.1]].forEach(function (c, n) { // nubes
-      var x = Math.round(((c[0] + t * 2.2 * A * (n + 1) * .6) % (LW + 50)) - 25), y = c[1];
-      ell(x, y, 11 * c[2], 3, '#ffffff'); ell(x - 6, y - 2, 6 * c[2], 3, '#ffffff'); ell(x + 5, y - 3, 7 * c[2], 3, '#ffffff');
-    });
-    var gg = g.createLinearGradient(0, GROUND, 0, 62); gg.addColorStop(0, '#9fd66b'); gg.addColorStop(1, '#78bb4f'); g.fillStyle = gg; g.fillRect(0, GROUND, LW, 62 - GROUND);
-    R(0, GROUND, LW, 1, '#b9e68d');
-    [[8, 55, '#ffb3c6'], [30, 58, '#fff'], [66, 56, '#ffe45e'], [96, 59, '#ffb3c6'], [140, 56, '#fff'], [152, 59, '#ffe45e']].forEach(function (f) { R(f[0], f[1], 2, 2, f[2]); R(f[0], f[1] + 2, 1, 1, '#4f9a2f'); });
-    // personaje
-    var pq = reduce ? .4 : Math.round(((1 - Math.cos(t * 2 * Math.PI / 6.5)) / 2) * 8) / 8;
-    var jt = t - ST.jumpT, jh = 0; if (jt >= 0 && jt < .6) jh = Math.round(Math.sin(jt / .6 * Math.PI) * 16);
-    var blink = !reduce && (t % 3.4) > 3.28, happy = jh > 0 || (t - ST.happyT) < 1.4 || ST.heart;
-    var bob = (pq > .5 && !reduce) ? -1 : 0;
-    ell(46, FEET - 1, 12 - Math.round(jh / 3), 2, 'rgba(40,90,20,.35)');
-    drawTomas(26, FEET - 55 + bob - jh, pq, blink, happy);
-    if (ST.heart) heart(70, 12 + Math.round(Math.sin(t * 3) * 2 * A), P.red, 2);
-    // panel de nombre (como la ventana de la 3DS)
-    box(86, 6, 69, 38, P.cream);
-    if (ST.page === 'home') { txt('Tomás Estévez', 91, 20, P.ink, 12); txt('Diseñador', 91, 30, P.line, 10); txt('Multimedial', 91, 39, P.line, 10); }
-    else { R(87, 7, 67, 4, TAB[ST.i]); txt(SEC[ST.i].k, 120, 28, P.ink, 15, 'center'); txt('Tomás E.', 120, 39, P.line, 10, 'center'); }
-  }
-  function icon(k, cx, cy) {
-    g.fillStyle = '#fff';
-    if (k === 0) { ell(cx, cy - 3, 2, 2, '#fff'); ell(cx, cy + 4, 4, 2, '#fff'); }
-    else if (k === 1) { R(cx - 5, cy - 4, 10, 8, '#fff'); R(cx, cy - 4, 1, 8, ICO[1]); R(cx - 4, cy - 2, 3, 1, ICO[1]); R(cx + 2, cy - 2, 3, 1, ICO[1]); }
-    else if (k === 2) { R(cx - 5, cy - 3, 11, 8, '#fff'); R(cx - 5, cy - 5, 5, 2, '#fff'); }
-    else { R(cx - 5, cy - 4, 11, 8, '#fff'); for (var i = 0; i < 5; i++) { R(cx - 5 + i, cy - 4 + i, 1, 1, ICO[3]); R(cx + 5 - i, cy - 4 + i, 1, 1, ICO[3]); } }
-  }
-  var BOX = function (i) { return { x: 5 + (i % 2) * 76, y: 68 + Math.floor(i / 2) * 37, w: 74, h: 34 }; };
-  var BTNS = [{ x: 10 }, { x: 46 }, { x: 82 }, { x: 118 }], BY = 120, BH = 16, BW = 32;
-  function ui(now) {
-    R(0, 62, LW, LH - 62, P.yel); R(0, 62, LW, 1, P.line);
-    for (var y = 0; y < LH - 62; y += 16) for (var x = 0; x < LW; x += 16) { var ox = (y / 16) % 2 ? 8 : 0; R(x + ox + 4, 66 + y + 2, 1, 3, '#f7a8c4'); R(x + ox + 3, 66 + y + 3, 3, 1, '#f7a8c4'); }
-    if (ST.page === 'home') {
-      SEC.forEach(function (s, i) {
-        var b = BOX(i), on = i === ST.sel;
-        if (on) R(b.x - 3, b.y - 3, b.w + 6, b.h + 6, P.org);
-        box(b.x, b.y, b.w, b.h, P.cream); R(b.x + 2, b.y + 2, b.w - 4, 4, TAB[i]);
-        R(b.x + 6, b.y + 12, 18, 18, ICO[i]); icon(i, b.x + 15, b.y + 21);
-        txt(s.k, b.x + 28, b.y + 24, P.ink, 13);
-      });
-    } else {
-      box(4, 66, 152, 75, P.cream);
-      var pgl = ST.pages[ST.pg] || [], n = reduce ? 9999 : Math.floor((now - ST.tStart) / 26), shown = 0, more = ST.pg < ST.pages.length - 1;
-      pgl.forEach(function (l, k) { var s = l.slice(0, Math.max(0, n - shown)); shown += l.length; txt(s, 9, 79 + k * 10, P.ink, 12); });
-      ST.done = n >= pageLen();
-      if (ST.done && more && Math.floor(now / 350) % 2) { g.fillStyle = P.org; g.beginPath(); g.moveTo(144, 109); g.lineTo(150, 109); g.lineTo(147, 113); g.fill(); }
-      BTNS.forEach(function (b, i) {
-        var on = i === ST.f && ST.done && !more; if (on) R(b.x - 2, BY - 2, BW + 4, BH + 4, P.org);
-        box(b.x, BY, BW, BH, '#f6e7df'); var cx = b.x + 16, cy = BY + 8;
-        if (i === 0) heart(cx - 3, cy - 3, ST.heart ? P.red : '#e9a9a5');
-        else if (i === 1) { g.fillStyle = P.red; g.beginPath(); g.moveTo(cx - 3, cy - 4); g.lineTo(cx + 4, cy); g.lineTo(cx - 3, cy + 4); g.fill(); }
-        else if (i === 2) txt(':)', cx, cy + 4, P.red, 13, 'center');
-        else { for (var q = -3; q <= 3; q++) { R(cx + q, cy + q, 2, 2, P.red); R(cx + q, cy - q, 2, 2, P.red); } }
-      });
+  /* ---------- tu foto, "vista desde la Game Boy Color" ---------- */
+  var PH = new Image(); PH.onload = markDirty; if (window.GB_FOTO) PH.src = window.GB_FOTO;
+  function photo(x, y) { panel(x - 2, y - 2, 88, 67, C.wh); if (PH.complete && PH.naturalWidth) g.drawImage(PH, x, y, 84, 63); }
+
+  /* ---------- íconos (16×16) ---------- */
+  function icon(k, cx, cy, t, on) {
+    var i, dy;
+    if (k === 0) { // carita con anteojos rojos
+      ell(cx, cy - 1, 7, 6, C.hair); ell(cx, cy + 1, 5, 5, C.skin);
+      R(cx - 6, cy - 1, 5, 3, C.red); R(cx + 2, cy - 1, 5, 3, C.red); R(cx - 1, cy - 1, 3, 1, C.red); R(cx - 5, cy, 3, 1, C.blue); R(cx + 3, cy, 3, 1, C.blue);
+      R(cx - 1, cy + 4, 3, 1, '#7a3f2a'); R(cx - 6, cy - 7, 3, 2, C.hair); R(cx + 3, cy - 7, 3, 2, C.hair);
+    } else if (k === 1) { // bola roja y blanca
+      for (dy = -7; dy <= 7; dy++) { var hw = Math.round(Math.sqrt(49.5 - dy * dy)); R(cx - hw, cy + dy, hw * 2 + 1, 1, C.ink); }
+      for (dy = -6; dy <= 6; dy++) { var h2 = Math.round(Math.sqrt(36.5 - dy * dy)); R(cx - h2, cy + dy, h2 * 2 + 1, 1, dy < -1 ? C.red : (dy > 1 ? C.wh : C.ink)); }
+      ell(cx, cy, 3, 3, C.ink); ell(cx, cy, 2, 2, C.wh);
+    } else if (k === 2) { // ♫
+      var b = on ? Math.round(Math.sin(t * 8) * 1) : 0;
+      R(cx - 2, cy - 6 + b, 1, 10, C.ink); R(cx + 5, cy - 8 + b, 1, 10, C.ink); R(cx - 2, cy - 7 + b, 8, 2, C.blue);
+      ell(cx - 4, cy + 4 + b, 3, 2, C.ink); ell(cx + 3, cy + 2 + b, 3, 2, C.ink);
+    } else if (k === 3) { // visuales: onda neón sobre fondo oscuro
+      R(cx - 8, cy - 7, 16, 14, C.ink); R(cx - 7, cy - 6, 14, 12, '#10143a');
+      var ph = on ? t * 4 : 0;
+      for (i = -6; i <= 6; i++) { R(cx + i, cy + Math.round(Math.sin(i * .8 + ph) * 3) - 1, 1, 2, C.cy); R(cx + i, cy + Math.round(Math.sin(i * .8 + ph + 2.2) * 3) + 1, 1, 1, C.pink); }
+    } else if (k === 4) { // joystick / control
+      R(cx - 8, cy - 4, 16, 9, '#8a94a8'); R(cx - 7, cy - 5, 14, 11, '#8a94a8'); R(cx - 8, cy - 4, 16, 1, '#b9c1d0'); R(cx - 8, cy + 4, 16, 1, '#5a6478');
+      R(cx - 6, cy, 5, 1, C.ink); R(cx - 4, cy - 2, 1, 5, C.ink); ell(cx + 3, cy + 1, 1, 1, C.red); ell(cx + 6, cy - 1, 1, 1, C.red);
+    } else { // carpeta (baja a proyectos)
+      R(cx - 8, cy - 6, 7, 3, '#e0a010'); R(cx - 8, cy - 4, 16, 11, C.yel); R(cx - 8, cy + 5, 16, 2, '#e0a010');
+      tri(cx - 3, cy - 1, 6, 4, 'd', C.wh);
     }
   }
-  function pageLen() { return (ST.pages[ST.pg] || []).join('').length; }
-  function paint(now) { g.setTransform(K, 0, 0, K, 0, 0); g.imageSmoothingEnabled = false; scene(now); ui(now); }
+  var ICOBOX = function (i) { return { x: 5 + (i % 3) * 52, y: 83 + Math.floor(i / 3) * 30, w: 48, h: 28 }; };
+
+  /* ---------- páginas ---------- */
+  function clockStr() { var d = new Date(); return ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2); }
+  function header(k, now) {
+    R(0, 0, LW, 18, C.blue); R(0, 18, LW, 1, C.ink);
+    if (k < 0) { for (var i = 0; i < 3; i++) heart(5 + i * 9, 5, C.red); R(0, 0, LW, 0, C.blue); }
+    else { panel(3, 1, 20, 16, C.wh); icon(k, 13, 9, now / 1000, false); }
+    txt(clockStr(), LW - 5, 13, C.wh, 14, 'right');
+    if (AU.playing) { ell(LW - 44, 11, 2, 1, C.yel); R(LW - 43, 4, 1, 7, C.yel); R(LW - 43, 4, 3, 1, C.yel); }
+  }
+  function typed(s, now) { var n = reduce ? 9999 : Math.floor((now - ST.t0) / 28); return s.slice(0, Math.max(0, n)); }
+
+  function pHome(now) {
+    var t = now / 1000;
+    R(0, 0, LW, 12, C.blue); R(0, 12, LW, 1, C.ink);
+    for (var i = 0; i < 3; i++) heart(5 + i * 9, 3, C.red);
+    txt(clockStr(), LW - 5, 10, C.wh, 12, 'right');
+    if (AU.playing) { ell(LW - 38, 8, 2, 1, C.yel); R(LW - 37, 2, 1, 6, C.yel); R(LW - 37, 2, 3, 1, C.yel); }
+    photo(6, 16);
+    panel(96, 14, 60, 66, C.wh);
+    txt('TOMÁS', 102, 31, C.ink, 16); txt('ESTÉVEZ', 102, 42, C.ink, 12); R(102, 46, 48, 1, C.lt);
+    txt('Diseño', 102, 57, C.mid, 10); txt('Multimedial', 102, 66, C.mid, 10); txt('UNLP', 102, 76, C.red, 10);
+    MENU.forEach(function (m, k) {
+      var b = ICOBOX(k), on = k === ST.sel;
+      if (on) { panel(b.x - 1, b.y - 1, b.w + 2, b.h + 2, C.red); panel(b.x + 1, b.y + 1, b.w - 2, b.h - 2, '#fff2b8'); }
+      else panel(b.x, b.y, b.w, b.h, C.wh);
+      icon(k, b.x + 24, b.y + 14 + (on && !reduce && Math.floor(t * 3) % 2 ? -1 : 0), t, on);
+    });
+  }
+  function pPerfil(now) {
+    header(0, now); photo(6, 24);
+    panel(96, 22, 60, 66, C.wh);
+    txt('TOMÁS', 102, 39, C.ink, 16); txt('ESTÉVEZ', 102, 50, C.ink, 12); R(102, 54, 48, 1, C.lt);
+    txt('UI/UX', 102, 65, C.blue, 10); txt('Video', 102, 74, C.red, 10); txt('Motion', 102, 83, C.grn, 10);
+    panel(4, 92, 152, 50, C.wh);
+    var ls = wrap(T_PERFIL, 140, 11), s = typed(T_PERFIL, now), shown = 0;
+    ls.forEach(function (l, k) { var part = s.slice(shown, shown + l.length + 1).slice(0, l.length); shown += l.length + 1; txt(part, 9, 104 + k * 9, C.ink, 11); });
+  }
+  function pStats(now) {
+    header(1, now);
+    panel(4, 22, 152, 22, C.wh); txt('TOMÁS E.', 10, 38, C.ink, 14); panel(88, 26, 64, 14, C.yel); txt('TIPO MULTIMEDIA', 120, 36, C.ink, 10, 'center');
+    var e = Math.min(1, (now - ST.t0) / 700); e = 1 - Math.pow(1 - e, 3);
+    STATS.forEach(function (s, i) {
+      var y = 49 + i * 22;
+      txt(s[0].toUpperCase(), 6, y + 8, C.ink, 11); txt(String(s[1]), 154, y + 8, C.blue, 11, 'right');
+      R(5, y + 11, 150, 7, C.ink); R(6, y + 12, 148, 5, C.lt);
+      var w = Math.round(148 * s[1] / 100 * e); R(6, y + 12, w, 5, s[1] >= 85 ? C.grn : C.yel); R(6, y + 12, w, 1, C.wh);
+    });
+    txt('PASIVA: MODO NOCTURNO', 80, 141, C.mid, 10, 'center');
+  }
+  function pMusica(now) {
+    var t = now / 1000, tr = TRACKS[AU.idx], i;
+    header(2, now);
+    var s1 = tr.n.toUpperCase(); txt(s1, 6, 33, C.ink, fit(s1, 148, 16)); txt(tr.a, 6, 43, C.mid, fit(tr.a, 148, 10));
+    panel(4, 47, 152, 42, C.ink); R(6, 49, 148, 38, '#0c1030');
+    if (AU.playing) AU.an.getByteFrequencyData(AU.data);
+    var n = 24, bw = 6;
+    for (i = 0; i < n; i++) {
+      var v = AU.playing ? AU.data[i + 1] / 255 : 0.1 + 0.05 * Math.sin(t * 2 + i) * A, bh = Math.max(2, Math.round(v * 34 / 2) * 2);
+      for (var yy = 0; yy < bh; yy += 2) R(8 + i * bw, 85 - yy - 2, bw - 1, 2, yy < 18 ? C.grn : (yy < 28 ? C.yel : C.red));
+    }
+    var dur = 256 * 60 / tr.bpm / 4, pos = AU.step / 256;
+    R(5, 94, 150, 7, C.ink); R(6, 95, 148, 5, C.lt); R(6, 95, Math.round(148 * pos), 5, C.blue);
+    txt(fmt(pos * dur) + ' / ' + fmt(dur), 6, 118, C.ink, 13);
+    panel(88, 105, 66, 22, C.wh);
+    tri(94, 111, 8, 10, 'l', C.blue); R(95, 111, 2, 10, C.blue);
+    if (AU.playing) { R(116, 110, 4, 12, C.red); R(122, 110, 4, 12, C.red); } else tri(116, 110, 10, 12, 'r', C.grn);
+    tri(140, 111, 8, 10, 'r', C.blue); R(147, 111, 2, 10, C.blue);
+    txt('◄ ►', 80, 141, C.mid, 10, 'center');
+  }
+  function pRave(now) {
+    var t = now / 1000, i, j;
+    header(3, now);
+    var ls = wrap(T_RAVE, 144, 11), s = typed(T_RAVE, now), shown = 0;
+    ls.forEach(function (l, k) { var part = s.slice(shown, shown + l.length + 1).slice(0, l.length); shown += l.length + 1; txt(part, 6, 32 + k * 9, C.ink, 11); });
+    panel(4, 84, 152, 56, C.ink); R(6, 86, 148, 52, '#0c1030');
+    var lv = 0; if (AU.playing) { AU.an.getByteFrequencyData(AU.data); for (i = 1; i < 11; i++) lv += AU.data[i]; lv /= 2550; }
+    var amp = 4 + lv * 14;
+    for (j = 0; j < 4; j++) for (i = 0; i < 36; i++) {
+      var x = 8 + i * 4, h = Math.sin(i * 0.5 + t * 2.4 * A + j * 0.9) * amp, yy = 100 + j * 8 + h * 0.5;
+      var u = Math.max(0, Math.min(1, (h + amp) / (2 * amp)));
+      R(x, Math.round(yy), 3, 3, u < 0.45 ? C.blue : (u < 0.8 ? C.cy : (j % 2 ? C.pink : C.wh)));
+    }
+  }
+  function pJuegos(now) {
+    var gm = GAMES[ST.game], k;
+    header(4, now);
+    // cartucho
+    var cx = 10, cy = 26, cc = [C.red, C.blue, C.grn, C.pink][ST.game];
+    R(cx, cy, 24, 28, C.ink); R(cx + 1, cy + 1, 22, 26, '#9aa3b5'); R(cx + 4, cy + 4, 16, 12, cc); R(cx + 4, cy + 4, 16, 2, C.wh); R(cx + 5, cy + 19, 14, 2, C.ink); R(cx + 5, cy + 23, 14, 1, '#5a6478');
+    var y = 33; wrap(gm[0].toUpperCase(), 100, 14).forEach(function (l) { txt(l, 42, y, C.ink, 14); y += 12; });
+    panel(4, 64, 152, 52, C.wh);
+    var yy = 78; wrap(gm[1], 138, 12).forEach(function (l) { txt(l, 10, yy, C.ink, 12); yy += 11; });
+    tri(8, 124, 7, 11, 'l', C.blue); tri(145, 124, 7, 11, 'r', C.blue);
+    GAMES.forEach(function (_, i) { panel(80 + (i - 1.5) * 14 - 5, 125, 10, 10, i === ST.game ? C.yel : C.wh); });
+  }
+  function paint(now) {
+    g.setTransform(K, 0, 0, K, 0, 0); g.imageSmoothingEnabled = false;
+    R(0, 0, LW, LH, C.bg);
+    ({ home: pHome, perfil: pPerfil, stats: pStats, musica: pMusica, rave: pRave, juegos: pJuegos })[ST.page](now);
+    g.setTransform(1, 0, 0, 1, 0, 0); g.fillStyle = lcd(); g.fillRect(0, 0, LW * K, LH * K); // rejilla LCD
+  }
+  var lcdPat; function lcd() {
+    if (lcdPat) return lcdPat;
+    var c = document.createElement('canvas'); c.width = c.height = 2; var x = c.getContext('2d'); x.fillStyle = 'rgba(0,0,40,.075)'; x.fillRect(1, 0, 1, 2); x.fillRect(0, 1, 2, 1);
+    return (lcdPat = g.createPattern(c, 'repeat'));
+  }
 
   /* ---------- navegación ---------- */
   function announce() {
-    srEl.textContent = ST.page === 'home' ? 'Menú. Sección ' + SEC[ST.sel].k + ', ' + (ST.sel + 1) + ' de ' + SEC.length : SEC[ST.i].k + '. ' + SEC[ST.i].t;
+    var s = '', p = ST.page;
+    if (p === 'home') s = 'Menú: ' + MENU[ST.sel][0] + ', opción ' + (ST.sel + 1) + ' de ' + MENU.length;
+    else if (p === 'perfil') s = 'Perfil. Tomás Estévez. ' + T_PERFIL;
+    else if (p === 'stats') s = 'Stats. ' + STATS.map(function (x) { return x[0] + ' ' + x[1]; }).join(', ');
+    else if (p === 'musica') s = 'Música: ' + TRACKS[AU.idx].n + ', ' + (AU.playing ? 'reproduciendo' : 'en pausa');
+    else if (p === 'rave') s = 'Visuales. ' + T_RAVE;
+    else s = 'Juego favorito ' + (ST.game + 1) + ' de ' + GAMES.length + ': ' + GAMES[ST.game][0] + '. ' + GAMES[ST.game][1];
+    srEl.textContent = s;
   }
-  function goSec(i) { var el = document.getElementById(SEC[i].id); if (el) el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' }); }
-  function open(i) {
-    ST.page = 'win'; ST.i = i; ST.f = 1; ST.pg = 0; ST.tStart = performance.now(); ST.done = reduce;
-    var ls = wrap(SEC[i].t, 138, 12); ST.pages = []; for (var k = 0; k < ls.length; k += 4) ST.pages.push(ls.slice(k, k + 4));
-    markDirty(); announce();
+  function open(p) {
+    if (p === 'proyectos') { var el = document.getElementById('proyectos'); if (el) el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' }); return; }
+    ST.page = p; ST.t0 = performance.now(); markDirty(); announce();
   }
-  function home() { ST.page = 'home'; markDirty(); announce(); }
-  function activate(b) {
-    if (b === 0) { ST.heart = !ST.heart; ST.happyT = performance.now() / 1000; }
-    else if (b === 1) goSec(ST.i);
-    else if (b === 2) { if (performance.now() / 1000 - ST.jumpT > .7) ST.jumpT = performance.now() / 1000; }
-    else home();
-    markDirty();
-  }
-  function advance() { // A / tocar el texto
-    var now = performance.now();
-    if (!reduce && !ST.done) { ST.tStart = now - pageLen() * 26 - 1; ST.done = true; }
-    else if (ST.pg < ST.pages.length - 1) { ST.pg++; ST.tStart = now; ST.done = false; }
-    else activate(ST.f);
-    markDirty();
-  }
+  function back() { if (ST.page !== 'home') open('home'); }
   function press(b) {
-    if (b === 'start') { goSec(2); }
-    else if (b === 'select') { if (ST.page !== 'home') home(); }
-    else if (ST.page === 'home') {
-      var r = Math.floor(ST.sel / 2), c = ST.sel % 2;
-      if (b === 'left' || b === 'right') c = 1 - c; else if (b === 'up' || b === 'down') r = 1 - r;
-      if (b === 'a') open(ST.sel); else { ST.sel = r * 2 + c; markDirty(); announce(); }
-    } else {
-      if (b === 'b') home();
-      else if (b === 'a') advance();
-      else if (b === 'left') { ST.f = (ST.f + 3) % 4; markDirty(); } else if (b === 'right') { ST.f = (ST.f + 1) % 4; markDirty(); }
-    }
+    var p = ST.page;
+    if (b === 'start') open('proyectos');
+    else if (b === 'select' || b === 'b') back();
+    else if (p === 'home') {
+      if (b === 'right') ST.sel = (ST.sel + 1) % 6; else if (b === 'left') ST.sel = (ST.sel + 5) % 6; else if (b === 'up' || b === 'down') ST.sel = (ST.sel + 3) % 6;
+      if (b === 'a') open(MENU[ST.sel][1]); else { markDirty(); announce(); }
+    } else if (p === 'musica') {
+      if (b === 'a') { AU.playing ? pause() : play(); } else if (b === 'right') go(1); else if (b === 'left') go(-1); announce();
+    } else if (p === 'juegos') {
+      if (b === 'right' || b === 'a') ST.game = (ST.game + 1) % GAMES.length; else if (b === 'left') ST.game = (ST.game + GAMES.length - 1) % GAMES.length;
+      markDirty(); announce();
+    } else if (b === 'left') back();
     nudge = 1;
   }
-  function tap(x, y) { // toque directo sobre la pantallita (coordenadas 0..160 × 0..144)
-    var i;
-    if (ST.page === 'home') { for (i = 0; i < 4; i++) { var b = BOX(i); if (x >= b.x && x <= b.x + b.w && y >= b.y && y <= b.y + b.h) { ST.sel = i; open(i); return true; } } return false; }
-    if (y >= BY && y <= BY + BH) { for (i = 0; i < 4; i++) if (x >= BTNS[i].x && x <= BTNS[i].x + BW) { ST.f = i; if (ST.done && ST.pg >= ST.pages.length - 1) activate(i); else advance(); return true; } }
-    if (y >= 66 && y < BY) { advance(); return true; }
+  function tap(x, y) { // toque directo sobre la pantallita (0..160 × 0..144)
+    var i, p = ST.page;
+    if (p === 'home') { for (i = 0; i < 6; i++) { var b = ICOBOX(i); if (x >= b.x && x <= b.x + b.w && y >= b.y && y <= b.y + b.h) { ST.sel = i; open(MENU[i][1]); return true; } } return false; }
+    if (y < 19 && x < 30) { back(); return true; }
+    if (p === 'musica' && y > 100 && y < 130) { press(x < 108 ? 'left' : (x > 134 ? 'right' : 'a')); return true; }
+    if (p === 'juegos' && y > 60) { press(x < 80 ? 'left' : 'right'); return true; }
+    if (y > 19) { if (p === 'musica') return false; back(); return true; }
     return false;
   }
 
   /* ---------- textura: foto del Game Boy + pantalla en vivo ---------- */
   var S = 2, TS = 1024 * S, baseCv, texCv, tx, tex, nudge = 0;
-  // botones (coordenadas del modelo: x derecha, y arriba, z frente)
-  var BTN = {
+  var BTN = { // botones (coordenadas del modelo)
     dpad: { x: -0.229, y: -0.066, z: 0.209, r: 0.098 }, a: { x: 0.32, y: -0.049, z: 0.213, r: 0.058 }, b: { x: 0.183, y: -0.112, z: 0.213, r: 0.058 },
     select: { x: -0.061, y: -0.302, z: 0.199, w: 0.11, h: 0.06 }, start: { x: 0.066, y: -0.296, z: 0.199, w: 0.11, h: 0.06 }
   };
@@ -216,10 +322,10 @@
     }
     return null;
   }
-  function screenUV(u, v) { // textura (rotada 90° y espejada) → coordenadas de la pantallita
-    var tx_ = u * 1024, ty_ = v * 1024;
-    if (tx_ < 70 || tx_ > 233 || ty_ < 475 || ty_ > 659) return null;
-    return { x: -(ty_ - 567) / (182 / 160) + 80, y: -(tx_ - 151.5) / (161 / 144) + 72 };
+  function screenUV(u, v) { // textura (rotada 90° y espejada) → pantallita
+    var a = u * 1024, b = v * 1024;
+    if (a < 70 || a > 233 || b < 475 || b > 659) return null;
+    return { x: -(b - 567) / (182 / 160) + 80, y: -(a - 151.5) / (161 / 144) + 72 };
   }
   var fx, fxUntil = 0;
   function flash(id) {
@@ -238,7 +344,7 @@
 
   /* ---------- escena 3D ---------- */
   var T = window.THREE, r, scene3, cam, rootG, model, mesh, SIZE, ray, ready = false, vis = true;
-  var px = 0, py = 0, spin = 0, spinV = 0, drag = false, moved = 0, lastX = 0, last = performance.now(), lastPaint = 0;
+  var px = 0, py = 0, spin = 0, spinV = 0, drag = false, moved = 0, lastX = 0, lastPaint = 0;
 
   function fail(msg) { root.classList.add('no3d'); if (loadEl) { loadEl.hidden = false; loadEl.textContent = msg; } }
   function b64buf(b64) { var s = atob(b64), n = s.length, u = new Uint8Array(n); for (var i = 0; i < n; i++) u[i] = s.charCodeAt(i); return u.buffer; }
@@ -254,8 +360,8 @@
     if (!ready) return null;
     scene3.updateMatrixWorld(true); ray.setFromCamera(pointerNDC(e), cam);
     var h = ray.intersectObject(mesh, false)[0]; if (!h) return null;
-    var b = hitTest(model.worldToLocal(h.point.clone())); if (b) return { b: b };
-    var s = h.uv && model.worldToLocal(h.point.clone()).z > 0.1 ? screenUV(h.uv.x, h.uv.y) : null; return s ? { s: s } : null;
+    var lp = model.worldToLocal(h.point.clone()), b = hitTest(lp); if (b) return { b: b };
+    var s = h.uv && lp.z > 0.1 ? screenUV(h.uv.x, h.uv.y) : null; return s ? { s: s } : null;
   }
 
   function init() {
@@ -294,9 +400,7 @@
       px = Math.max(-1, Math.min(1, (e.clientX - (b.left + b.width / 2)) / 350));
       py = Math.max(-1, Math.min(1, (e.clientY - (b.top + b.height / 2)) / 260));
       if (drag) { spinV = (e.clientX - lastX) * 0.012; spin += spinV; moved += Math.abs(e.clientX - lastX); lastX = e.clientX; }
-      else if (ready && e.target === r.domElement) {
-        var h = hitAt(e), over = h && (h.b || (h.s && (ST.page === 'win' ? h.s.y > 62 : h.s.y > 62))); visor.style.cursor = over ? 'pointer' : 'grab';
-      }
+      else if (ready && e.target === r.domElement) { var h = hitAt(e); visor.style.cursor = (h && (h.b || h.s)) ? 'pointer' : 'grab'; }
     });
     visor.addEventListener('pointerdown', function (e) { drag = true; moved = 0; lastX = e.clientX; try { visor.setPointerCapture(e.pointerId); } catch (x) {} });
     addEventListener('pointerup', function (e) {
@@ -304,11 +408,11 @@
       drag = false;
     });
     visor.addEventListener('keydown', function (e) {
-      if (e.key >= '1' && e.key <= '4') { e.preventDefault(); open(+e.key - 1); return; }
       var m = { ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right', Enter: 'a', ' ': 'a', z: 'a', Z: 'a', Escape: 'b', Backspace: 'b', x: 'b', X: 'b' }[e.key];
       if (!m) return; e.preventDefault(); press(m); flash(m);
     });
-    if ('IntersectionObserver' in window) new IntersectionObserver(function (en) { vis = en[0].isIntersecting; }).observe(visor);
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (en) { vis = en[0].isIntersecting; if (!vis && AU.playing) pause(); }).observe(visor);
+    document.addEventListener('visibilitychange', function () { if (document.hidden && AU.playing) pause(); });
     if (document.fonts) { document.fonts.load('16px VT323').then(markDirty, function () {}); document.fonts.ready.then(markDirty); }
     requestAnimationFrame(loop);
   }
@@ -316,15 +420,17 @@
   function loop(now) {
     requestAnimationFrame(loop);
     if (!ready || !vis || document.hidden) return;
-    var t = now / 1000;
-    var typing = ST.page === 'win' && !ST.done;
-    if (dirty || (!reduce && now - lastPaint > 80) || (typing && now - lastPaint > 36)) { paint(now); blit(); dirty = false; lastPaint = now; }
+    var t = now / 1000, p = ST.page;
+    var typing = (p === 'perfil' && now - ST.t0 < T_PERFIL.length * 28 + 100) || (p === 'rave' && now - ST.t0 < T_RAVE.length * 28 + 100);
+    var every = typing ? 36 : (p === 'musica' || p === 'rave' || (p === 'stats' && now - ST.t0 < 800)) ? 70 : 280;
+    if (dirty || (!reduce && now - lastPaint > every)) { paint(now); blit(); dirty = false; lastPaint = now; }
     if (!drag) { spinV *= 0.92; spin += spinV; spin *= 0.95; }
     rootG.rotation.y += (spin + px * 0.35 * A - rootG.rotation.y) * 0.12;
     rootG.rotation.x += (py * 0.16 * A - rootG.rotation.x) * 0.12;
     rootG.position.y = Math.sin(t * 1.6) * 0.02 * A;
+    var beat = AU.playing ? Math.sin(t * (TRACKS[AU.idx].bpm / 60) * Math.PI * 2) : 0;
     if (fx && fx.visible && now > fxUntil) fx.visible = false;
-    nudge *= 0.85; rootG.scale.setScalar(1 - nudge * 0.02);
+    nudge *= 0.85; rootG.scale.setScalar(1 - nudge * 0.02 + Math.abs(beat) * 0.01 * A);
     r.render(scene3, cam);
   }
   init();

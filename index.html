@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tomás Estévez — Portfolio</title>
+<meta name="description" content="Portfolio de Tomás Estévez, estudiante de Diseño Multimedial en la UNLP: UI/UX, edición de video, motion graphics y animación.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Poppins:wght@400;500&family=VT323&display=swap" rel="stylesheet">
+<style>
+:root{--azul:#1a00d4;--rosa:#ff6bff;--verde:#16d93a;--amarillo:#fff94a;--naranja:#ff5a1f;--rojo:#e8202a;--gris:#d4d4d4;--papel:#f7f7f7;--tinta:#14121f}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:12px}
+body{margin:0;font-family:Poppins,system-ui,sans-serif;color:var(--tinta);line-height:1.6;
+ background:linear-gradient(#8fb8e8 0,#cfe3f7 220px,#7fae4b 220px,#4f8a2c 100%) fixed}
+a{color:var(--azul)}
+:focus-visible{outline:3px solid var(--naranja);outline-offset:2px}
+.px{font-family:VT323,monospace;text-transform:uppercase;letter-spacing:.04em;line-height:.95}
+.cursiva{font-family:"Pinyon Script",cursive;text-transform:none;font-size:1.5em;line-height:.6;vertical-align:-.12em}
+main{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:24px 16px 40px;display:grid;gap:40px}
+/* ventanas */
+.win{background:var(--gris);border:2px solid;border-color:#fff #404040 #404040 #fff;box-shadow:4px 4px 0 rgba(0,0,0,.35)}
+.win>header{background:var(--azul);color:#fff;display:flex;justify-content:space-between;align-items:center;padding:3px 6px;font-family:VT323,monospace;font-size:1.25rem}
+.win>header i{font-style:normal;display:flex;gap:3px}
+.win>header b{width:16px;height:16px;background:var(--gris);border:2px solid;border-color:#fff #404040 #404040 #fff}
+.win .body{margin:4px;background:var(--papel);border:2px solid;border-color:#404040 #fff #fff #404040;padding:20px}
+h1,h2{margin:0;font-weight:400}
+h2{font-size:clamp(2.4rem,7vw,4.2rem);color:var(--azul)}
+/* hero */
+.hero .body{text-align:center;padding:28px 16px}
+.hero h1{font-size:clamp(3.2rem,15vw,9rem);color:var(--rosa)}
+.hero h1 .a{color:var(--rojo)}.hero h1 .b{color:var(--azul)}.hero h1 .c{color:var(--naranja)}
+.hero p{margin:12px auto 0;max-width:46ch}
+.iconos{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:22px}
+.iconos a{font-family:VT323,monospace;font-size:1.4rem;text-decoration:none;color:var(--tinta);background:var(--gris);padding:4px 16px;border:2px solid;border-color:#fff #404040 #404040 #fff}
+.iconos a:hover{background:var(--amarillo)}
+.iconos a:active{border-color:#404040 #fff #fff #404040}
+/* sobre mi */
+.sobre .body{display:grid;grid-template-columns:minmax(0,260px) 1fr;gap:24px;align-items:center}
+.foto{position:relative}
+.foto img{display:block;width:100%;height:auto}
+.chip{position:absolute;font-family:VT323,monospace;font-size:1.4rem;padding:0 12px;border-radius:20px;border:2px solid var(--tinta);transform:rotate(-8deg)}
+.chip.t{background:var(--rosa);top:8px;left:-8px}.chip.e{background:var(--amarillo);bottom:28px;right:-8px;transform:rotate(8deg)}
+.verdes{display:grid;gap:12px;margin:0;padding:0;list-style:none}
+.verdes li{background:linear-gradient(#7dfb8a,#16d93a);border-radius:18px;padding:14px 20px;font-weight:500}
+/* educacion */
+.edu .body{display:grid;gap:20px}
+.cinta{background:var(--amarillo);border-radius:30px;padding:6px 20px;font-family:VT323,monospace;font-size:1.3rem;text-align:center}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.cols .win .body{padding:16px}
+.cols h3{margin:0 0 8px;font-family:VT323,monospace;font-weight:400;font-size:1.5rem;background:var(--rosa);display:inline-block;padding:0 16px;border-radius:20px;border:2px solid var(--tinta)}
+.cols ul{margin:0;padding-left:1.1em}
+.cols .logos{list-style:none;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:14px 12px}
+.logos li{display:flex;align-items:center;gap:10px;font-weight:500}
+.logos img{width:56px;height:56px;flex:none}
+/* proyectos */
+.proy{display:grid;grid-template-columns:minmax(0,1fr);gap:32px}.proy>*,.dex .body,.dex-wrap{min-width:0}
+.caso{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+.caso .body{padding:16px}
+.caso h3{margin:0 0 6px;font-family:VT323,monospace;font-weight:400;font-size:2.2rem;text-transform:uppercase}
+.caso img,.caso video{width:100%;display:block;background:var(--gris);border:2px solid var(--tinta)}
+.caso video{aspect-ratio:9/16;max-height:520px;object-fit:cover;margin:0 auto}
+.tag{display:inline-block;font-family:VT323,monospace;font-size:1.3rem;padding:0 12px;border-radius:20px;margin-bottom:8px;background:var(--verde)}
+.globo{background:var(--amarillo);border-radius:16px;padding:10px 16px;margin:10px 0 0;font-size:.95rem}
+.btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.btn{font-family:VT323,monospace;font-size:1.4rem;color:#fff;background:linear-gradient(#4a4aff,var(--azul));padding:2px 24px;border-radius:24px;text-decoration:none}
+.btn:hover{background:var(--naranja)}
+.galeria{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+/* contacto */
+.contacto{text-align:center}
+.contacto h2{color:var(--naranja);text-shadow:2px 2px 0 #fff}
+.pill{display:block;width:fit-content;margin:12px auto 0;padding:6px 28px;border-radius:30px;font-family:VT323,monospace;font-size:1.6rem;color:#fff;text-decoration:none;background:var(--rojo)}
+.pill.mail{background:var(--rosa);color:var(--tinta)}
+.pill:hover{outline:3px solid var(--amarillo)}
+@media(max-width:720px){.sobre .body,.cols,.caso{grid-template-columns:1fr}.foto{max-width:260px;margin:auto}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+.full .body{padding:16px}.full h3{margin:0 0 6px;font-family:VT323,monospace;font-weight:400;font-size:2.2rem;text-transform:uppercase}
+.full video,.full .news{display:block;width:100%;background:var(--tinta);border:2px solid var(--tinta)}
+video.tall{aspect-ratio:9/16;object-fit:cover}
+video.tall{max-width:320px;max-height:560px;margin:12px auto 0}
+video.wide{aspect-ratio:16/9;object-fit:contain}
+.caso a img{border:2px solid var(--tinta);display:block;width:100%;height:auto;background:var(--gris)}
+.galeria.g4{grid-template-columns:repeat(2,1fr)}.galeria img{width:100%;border:2px solid var(--tinta)}
+.news{max-width:340px;margin:12px auto 0}
+.dos{display:grid;grid-template-columns:1fr 1fr;gap:12px}.dos figure{margin:0}
+figcaption{font-family:VT323,monospace;font-size:1.2rem;margin-top:4px}
+.contacto{position:relative;overflow:hidden;padding:72px 16px;border:2px solid var(--tinta)}
+.contacto .fondo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.contacto::after{content:"";position:absolute;inset:0;background:rgba(20,18,31,.45)}
+.contacto .in{position:relative;z-index:1}
+.contacto h2{color:#fff;text-shadow:3px 3px 0 var(--naranja)}
+@media(max-width:720px){.dos{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.contacto .fondo{display:none}.contacto{background:var(--tinta)}}
+
+
+/* HOME · Game Boy */
+.win>header{gap:6px}.win>header span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.win>header i{flex:none}
+main>*,.hero .body,.home{min-width:0}
+.home{position:relative;width:100%;max-width:440px;margin:0 auto;text-align:center}
+.gb-visor{position:relative;height:min(80vh,600px);min-height:430px;cursor:grab;touch-action:pan-y}
+.gb-visor:active{cursor:grabbing}
+.gb-visor:focus-visible{outline-offset:-6px}
+.gb-visor::after{content:"";position:absolute;left:50%;bottom:3.5%;width:46%;height:5%;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(20,18,31,.35),transparent);pointer-events:none}
+.gb-visor canvas{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:1}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px 24px;align-items:center;text-align:left!important;padding:24px clamp(12px,3vw,28px)!important}
+.hero-text h1{font-size:clamp(2.6rem,9vw,6.2rem);white-space:nowrap}
+.hero-text p{margin:12px 0 0;max-width:34ch}
+.hero-text .iconos{justify-content:flex-start;gap:8px}.hero-text .iconos a{padding:4px 12px;font-size:1.3rem}
+.gb-load{position:absolute;inset:0;display:grid;place-items:center;margin:0;font-size:1.6rem;color:var(--azul);text-align:center;padding:0 16px}
+.gb-load[hidden]{display:none}
+@media(max-width:620px){.hero-text h1{font-size:clamp(3rem,15vw,5rem)}.hero-grid{grid-template-columns:1fr;padding:20px 12px!important}.hero-text{text-align:center}.hero-text p{margin-left:auto;margin-right:auto}.hero-text .iconos{justify-content:center}.home{order:2}}
+@media(max-width:560px){.gb-visor{height:auto;min-height:0;aspect-ratio:3/5}}
+.legal{margin:0;padding:18px 12px 6px;text-align:center;font-size:.62rem;line-height:1.4;color:#9a98a6}.legal a{color:inherit}
+.gb-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.home.no3d .gb-visor{min-height:120px;height:auto;padding:24px 0}.home.no3d .gb-visor::after{display:none}
+/* Filo News · mini computadora 3D que gira con el scroll */
+.pc-scroll{position:relative;height:320vh;margin-top:8px}
+.pc-stage{position:sticky;top:0;height:100vh;min-height:420px;display:grid;place-items:center;perspective:1700px;overflow:visible}
+.pc-3d{position:relative;font-size:clamp(8px,min(3.4vw,2.2vh),16px);width:26em;height:31em;transform-style:preserve-3d;will-change:transform;transform:scale(.78) rotateX(9deg) rotateY(-210deg)}
+.pc-f{position:absolute;backface-visibility:hidden}
+.pc-front{inset:0;transform:translateZ(10em);border-radius:.8em;background:linear-gradient(#e4e1d5,#d0cdc0);box-shadow:inset 0 0 0 .18em rgba(255,255,255,.6),inset 0 -.5em .8em rgba(0,0,0,.14)}
+.pc-back{inset:0;transform:rotateY(180deg) translateZ(10em);border-radius:.8em;background:#b9b6a9;box-shadow:inset 0 0 0 .18em rgba(255,255,255,.35)}
+.pc-left,.pc-right{width:20em;height:31em;left:50%;top:0;margin-left:-10em;background:repeating-linear-gradient(#c2bfb2 0 .5em,#b2afa2 .5em .62em)}
+.pc-left{transform:rotateY(-90deg) translateZ(13em)}.pc-right{transform:rotateY(90deg) translateZ(13em)}
+.pc-top,.pc-bottom{width:26em;height:20em;left:0;top:50%;margin-top:-10em;background:repeating-linear-gradient(90deg,#e7e4d9 0 1em,#d6d3c7 1em 1.12em)}
+.pc-top{transform:rotateX(90deg) translateZ(15.5em)}.pc-bottom{transform:rotateX(-90deg) translateZ(15.5em);background:#9d9a8e}
+.pc-bezel{position:absolute;left:2.6em;top:2.4em;width:20.8em;height:16.6em;box-sizing:border-box;padding:1em;background:#1b1b24;border-radius:1.6em/1.4em;box-shadow:inset .2em .2em .6em rgba(0,0,0,.75),0 0 0 .3em #bcb8aa,0 0 0 .5em #f0ede3}
+.pc-view{position:relative;width:100%;height:100%;overflow:hidden;border-radius:.6em;background:#fff}
+.pc-view img{position:absolute;left:0;top:0;width:100%;height:auto;display:block;border:0;background:none;will-change:transform}
+.pc-view::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;box-shadow:inset 0 0 1.4em rgba(0,0,0,.4);background:linear-gradient(135deg,rgba(255,255,255,.2),transparent 38%)}
+.pc-stripe{position:absolute;left:3.2em;bottom:9.4em;width:7em;height:.55em;background:linear-gradient(90deg,var(--rojo),var(--naranja),var(--amarillo),var(--verde),var(--azul),var(--rosa))}
+.pc-drive{position:absolute;left:3.2em;bottom:5.4em;width:12em;height:2.4em;border-radius:.3em;background:#c6c3b6;box-shadow:inset 0 0 0 .15em rgba(255,255,255,.7),inset 0 -.2em .3em rgba(0,0,0,.2)}
+.pc-drive::before{content:"";position:absolute;left:1.5em;right:1.5em;top:.9em;height:.5em;background:#2a2a30;border-radius:.2em}
+.pc-led{position:absolute;right:3.6em;bottom:6.1em;width:.95em;height:.95em;border-radius:50%;background:#2be45a;box-shadow:0 0 .9em #2be45a}
+.pc-brand{position:absolute;left:0;right:0;bottom:1.6em;text-align:center;font:400 1.9em/1 VT323,monospace;letter-spacing:.22em;color:#6a675c}
+.pc-vents{position:absolute;left:3em;right:3em;top:3em;height:12em;background:repeating-linear-gradient(#8f8c80 0 .45em,transparent .45em 1.1em);border-radius:.4em}
+.pc-port{position:absolute;left:4em;bottom:6em;width:3em;height:3em;border-radius:50%;background:#2a2a30;box-shadow:0 0 0 .4em #a8a598}.pc-port.p2{left:9em}
+.pc-plate{position:absolute;right:3em;bottom:6.4em;font:400 1.5em/1 VT323,monospace;color:#6a675c;border:.12em solid #6a675c;padding:.2em .5em}
+.pc-shadow{position:absolute;left:50%;bottom:7%;width:min(60vw,520px);height:3.4em;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(20,18,31,.3),transparent);font-size:clamp(8px,min(3.4vw,2.2vh),16px);pointer-events:none}
+.pc-reduce{height:auto}.pc-reduce .pc-stage{position:static;height:auto;padding:40px 0}.pc-reduce .pc-view{overflow:auto}.pc-reduce .pc-view img{position:static}
+@media(max-width:720px){.pc-scroll{height:280vh}}
+
+/* ===== más movimiento ===== */
+.sky{position:fixed;left:0;top:0;width:100%;height:230px;overflow:hidden;z-index:0;pointer-events:none}
+.cloud{position:absolute;left:0;width:7px;height:7px;background:transparent;box-shadow:28px 0px #fff,35px 0px #fff,42px 0px #fff,49px 0px #fff,14px 7px #fff,21px 7px #fff,28px 7px #fff,35px 7px #fff,42px 7px #fff,49px 7px #fff,56px 7px #fff,63px 7px #fff,7px 14px #fff,14px 14px #fff,21px 14px #fff,28px 14px #fff,35px 14px #fff,42px 14px #fff,49px 14px #fff,56px 14px #fff,63px 14px #fff,70px 14px #fff,77px 14px #fff,0px 21px #fff,7px 21px #fff,14px 21px #fff,21px 21px #fff,28px 21px #fff,35px 21px #fff,42px 21px #fff,49px 21px #fff,56px 21px #fff,63px 21px #fff,70px 21px #fff,77px 21px #fff,84px 21px #fff,91px 21px #fff,7px 28px #d3e4f5,14px 28px #d3e4f5,21px 28px #d3e4f5,28px 28px #d3e4f5,35px 28px #d3e4f5,42px 28px #d3e4f5,49px 28px #d3e4f5,56px 28px #d3e4f5,63px 28px #d3e4f5,70px 28px #d3e4f5,77px 28px #d3e4f5,84px 28px #d3e4f5;opacity:.95;animation:drift 110s linear infinite}
+.cloud.c1{top:44px;animation-duration:120s;animation-delay:-30s}.cloud.c2{top:112px;scale:1.5;animation-duration:170s;animation-delay:-100s;opacity:.8}.cloud.c3{top:20px;scale:.8;animation-duration:95s;animation-delay:-70s}.cloud.c4{top:160px;scale:1.2;animation-duration:150s;animation-delay:-10s;opacity:.7}
+@keyframes drift{from{translate:-160px 0}to{translate:calc(100vw + 60px) 0}}
+.prog{position:fixed;left:0;right:0;top:0;height:6px;z-index:60;pointer-events:none}
+.prog i{display:block;height:100%;transform-origin:0 50%;transform:scaleX(var(--p,0));background:repeating-linear-gradient(90deg,var(--rojo) 0 16px,var(--naranja) 16px 32px,var(--amarillo) 32px 48px,var(--verde) 48px 64px,var(--azul) 64px 80px,var(--rosa) 80px 96px);box-shadow:0 2px 0 rgba(0,0,0,.25)}
+.ticker{overflow:hidden;background:var(--tinta);border:2px solid var(--tinta);box-shadow:4px 4px 0 rgba(0,0,0,.35);transform:rotate(-1.2deg);margin:0 -6px}
+.tk{display:flex;width:max-content;animation:tk 34s linear infinite}.tk span{padding:6px 0;font:400 1.5rem/1 VT323,monospace;letter-spacing:.08em;color:var(--amarillo);white-space:pre}
+@keyframes tk{to{transform:translateX(-50%)}}
+.ch{display:inline-block;animation:chIn .75s cubic-bezier(.2,1.7,.4,1) both,bob 3.4s ease-in-out infinite;animation-delay:calc(var(--i)*70ms),calc(1s + var(--i)*.18s)}
+@keyframes chIn{from{opacity:0;transform:translateY(-90%) scale(.2) rotate(-25deg)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-.055em)}}
+.js .rv{opacity:0;transform:translateY(38px) scale(.96);transition:opacity .7s ease,transform .85s cubic-bezier(.2,1.35,.4,1);transition-delay:var(--d,0ms)}
+.js .rv.l{transform:translateX(-70px)}.js .rv.r{transform:translateX(70px)}.js .rv.z{transform:scale(.55) rotate(-5deg)}
+.js .rv.in{opacity:1;transform:none}
+.btn{transition:transform .18s cubic-bezier(.3,1.8,.5,1),background .2s}.btn:hover{transform:translateY(-3px) rotate(-1.5deg)}.btn:active{transform:translateY(1px) scale(.97)}
+.iconos a{transition:transform .18s cubic-bezier(.3,1.8,.5,1),background .2s}.iconos a:hover{transform:translateY(-3px) rotate(-2deg)}
+.tag{animation:tagp 2.8s ease-in-out infinite}@keyframes tagp{0%,100%{transform:none}50%{transform:translateY(-3px) rotate(-2deg)}}
+.logos li{transition:transform .2s cubic-bezier(.3,1.8,.5,1)}.logos li:hover{transform:translateY(-4px) scale(1.07) rotate(-2deg)}
+.verdes li{transition:transform .25s cubic-bezier(.3,1.8,.5,1)}.verdes li:hover{transform:translateX(8px) scale(1.01)}
+/* foto con lente */
+.foto{perspective:800px}
+.foto-frame{--x:50%;--y:42%;--r:72px;position:relative;overflow:hidden;border:3px solid var(--tinta);background:var(--tinta);box-shadow:5px 5px 0 rgba(0,0,0,.35);transform:rotateX(var(--tx,0deg)) rotateY(var(--ty,0deg));transition:transform .2s;touch-action:pan-y;cursor:none}
+.foto-frame img{display:block;width:100%;height:auto}
+.foto-px{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated;filter:url(#gbc);-webkit-mask-image:radial-gradient(circle var(--r) at var(--x) var(--y),transparent calc(var(--r) - 2px),#000 var(--r));mask-image:radial-gradient(circle var(--r) at var(--x) var(--y),transparent calc(var(--r) - 2px),#000 var(--r))}
+.foto-scan{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,40,.16) 0 1px,transparent 1px 3px);-webkit-mask-image:radial-gradient(circle var(--r) at var(--x) var(--y),transparent calc(var(--r) - 2px),#000 var(--r));mask-image:radial-gradient(circle var(--r) at var(--x) var(--y),transparent calc(var(--r) - 2px),#000 var(--r))}
+.lens{position:absolute;left:var(--x);top:var(--y);width:calc(var(--r)*2);height:calc(var(--r)*2);transform:translate(-50%,-50%);border:3px solid #fff;border-radius:50%;box-shadow:0 0 0 2px var(--tinta),0 0 22px rgba(255,255,255,.7),inset 0 0 12px rgba(255,255,255,.4);pointer-events:none}
+.lens::before,.lens::after{content:"";position:absolute;background:#fff;opacity:.8}.lens::before{left:50%;top:-10px;width:2px;height:12px}.lens::after{top:50%;left:-10px;height:2px;width:12px}
+.chip{animation:chipw 3.2s ease-in-out infinite}.chip.e{animation-delay:-1.6s}@keyframes chipw{0%,100%{translate:0 0}50%{translate:0 -5px}}
+/* fundamentos creativos */
+.edu h2{text-align:center}.cinta{justify-self:center;max-width:100%}
+.edu .cols .body{display:block}.cols{align-items:stretch}.cols>.win{display:flex;flex-direction:column}.cols>.win>.body{flex:1}
+.skills{list-style:none;padding:0!important;display:flex;flex-wrap:wrap;gap:10px}
+.skills li{font-family:VT323,monospace;font-size:1.4rem;line-height:1;padding:7px 15px;border:2px solid var(--tinta);border-radius:20px;background:var(--rosa);cursor:default;transition:transform .2s cubic-bezier(.3,1.8,.5,1)}
+.skills li:nth-child(2n){background:var(--verde)}.skills li:nth-child(3n){background:var(--amarillo)}.skills li:nth-child(5n){background:#7fd8ff}
+.skills li:hover{transform:translateY(-4px) rotate(-3deg) scale(1.09)}
+/* proyectos: ventana grande + proyectodex */
+.dex .body{position:relative;overflow:hidden;padding:22px 14px 28px;background:linear-gradient(#10143a,#1b1b5c);color:#fff}
+.dex .body::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 15% 8%,rgba(255,107,255,.28),transparent 40%),radial-gradient(circle at 88% 92%,rgba(56,200,240,.25),transparent 45%),repeating-linear-gradient(0deg,rgba(255,255,255,.03) 0 2px,transparent 2px 4px)}
+.dex-title{position:relative;text-align:center;color:var(--rosa);text-shadow:3px 3px 0 var(--azul)}
+.dex-hud{position:relative;display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;margin:16px auto 4px;max-width:680px}
+.dex-ball{flex:none;position:relative;width:36px;height:36px;border-radius:50%;border:3px solid #14121f;background:linear-gradient(#e8202a 0 44%,#14121f 44% 56%,#fff 56%);animation:wob 3.6s ease-in-out infinite}
+.dex-ball::after{content:"";position:absolute;left:50%;top:50%;width:11px;height:11px;margin:-5.5px 0 0 -5.5px;border-radius:50%;background:#fff;border:3px solid #14121f}
+@keyframes wob{0%,60%,100%{transform:rotate(0)}68%{transform:rotate(-18deg)}76%{transform:rotate(16deg)}84%{transform:rotate(-9deg)}92%{transform:rotate(5deg)}}
+.dex-meter{flex:1;min-width:210px}.dex-xp{height:16px;border:3px solid #fff;background:#0a0c28}
+.dex-xp i{display:block;height:100%;width:0;background:repeating-linear-gradient(90deg,var(--verde) 0 8px,#7dfb8a 8px 16px);transition:width .9s cubic-bezier(.2,1,.3,1)}
+#dex-count{font:400 1.3rem/1.2 VT323,monospace;color:var(--amarillo)}
+.dex-btn{font-family:VT323,monospace;font-size:1.3rem;line-height:1.2;color:#fff;background:linear-gradient(#4a4aff,var(--azul));border:2px solid;border-color:#9a9aff #0a0070 #0a0070 #9a9aff;padding:3px 18px;cursor:pointer;display:inline-flex;gap:8px;align-items:center;transition:transform .15s cubic-bezier(.3,1.8,.5,1)}
+.dex-btn:hover{background:var(--naranja);transform:translateY(-2px)}.dex-btn:active{transform:translateY(1px)}
+.d20{display:inline-grid;place-items:center;width:30px;height:30px;background:var(--amarillo);color:var(--tinta);font-size:1rem;clip-path:polygon(50% 0,95% 25%,95% 75%,50% 100%,5% 75%,5% 25%)}
+.d20.roll{animation:spin .45s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+.dex-wrap{position:relative;margin-top:4px}
+.dex-track{display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding:0 64px;padding:28px 64px 34px;scrollbar-width:none;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y}
+.dex-track::-webkit-scrollbar{display:none}
+.dcard{position:relative;flex:0 0 min(240px,66vw);aspect-ratio:5/7;scroll-snap-align:start;perspective:900px;cursor:pointer;outline-offset:8px;-webkit-tap-highlight-color:transparent}
+.dc-inner{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateX(var(--rx,0deg)) rotateY(calc(var(--ry,0deg) + var(--flip,0deg)));transition:transform .7s cubic-bezier(.2,1.25,.3,1)}
+.dcard.tilt .dc-inner{transition:transform .09s linear}.dcard.flipped{--flip:180deg}
+.dc-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column;gap:6px;padding:10px;overflow:hidden;color:var(--tinta);border-radius:14px;border:5px solid var(--c);background:linear-gradient(160deg,#fffdf0,#f3ebc8);box-shadow:0 16px 28px rgba(0,0,0,.5)}
+.dc-back{transform:rotateY(180deg);color:#fff;background:linear-gradient(165deg,var(--c),#14121f 85%)}
+.t-ui{--c:#2ea0ff}.t-br{--c:#ff6bff}.t-vi{--c:#5a5aff}.t-re{--c:#ff7a2f}.t-an{--c:#22d443}.t-vj{--c:#b04aff}
+.dc-top{display:flex;justify-content:space-between;align-items:baseline;gap:6px}.dc-name{font-size:1.45rem;line-height:1}.dc-hp{font-size:1.25rem;color:var(--rojo);white-space:nowrap}
+.dc-art{position:relative;flex:1;min-height:0;display:grid;place-items:center;overflow:hidden;border:3px solid var(--tinta);background:linear-gradient(135deg,var(--c),#14121f)}
+.dc-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top;border:0;background:none}.dc-art svg{width:68%;filter:drop-shadow(3px 4px 0 rgba(0,0,0,.4));animation:art 3s ease-in-out infinite}
+@keyframes art{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-6px) rotate(2deg)}}
+.dc-type{align-self:flex-start;padding:0 10px;font-size:1.1rem;line-height:1.35;color:#fff;background:var(--c);border:2px solid var(--tinta);border-radius:12px}
+.dc-info{margin:0;font-size:.72rem;line-height:1.3}.dc-foot{display:flex;justify-content:space-between;font:400 1.05rem/1 VT323,monospace;color:#6a675c}.dc-flip{display:inline-block;animation:spin 3.5s linear infinite}
+.dc-back h4{margin:0;font-size:1.7rem;text-shadow:2px 2px 0 var(--tinta)}.dc-back .dc-type{background:#14121f;border-color:#fff}
+.dc-stats{list-style:none;margin:6px 0 auto;padding:0;display:grid;gap:9px;font:400 1.1rem/1 VT323,monospace}
+.dc-stats li{display:grid;grid-template-columns:92px 1fr 24px;gap:6px;align-items:center}.dc-stats i{height:10px;border:2px solid #fff;background:#0a0c28;position:relative}
+.dc-stats i::after{content:"";position:absolute;inset:0;width:0;background:var(--amarillo);transition:width .8s .35s cubic-bezier(.2,1,.3,1)}.dcard.flipped .dc-stats i::after{width:var(--v)}
+.dc-holo{position:absolute;inset:0;pointer-events:none;border-radius:inherit;mix-blend-mode:color-dodge;opacity:var(--g,0);transition:opacity .25s;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.85),transparent 42%),linear-gradient(115deg,transparent 15%,rgba(255,0,200,.55) 35%,rgba(0,255,255,.55) 50%,rgba(255,240,0,.5) 65%,transparent 85%);background-size:auto,220% 220%;background-position:center,var(--hx,50%) 50%}
+.dc-back .dc-holo{mix-blend-mode:soft-light;opacity:calc(var(--g,0)*.55)}
+.dcard.seen .dc-face{box-shadow:0 0 0 3px var(--amarillo),0 16px 28px rgba(0,0,0,.5)}
+.dcard.glow{animation:cglow .7s ease 3}@keyframes cglow{50%{filter:drop-shadow(0 0 22px var(--amarillo)) brightness(1.15);translate:0 -10px}}
+.dex-nav{position:absolute;top:50%;z-index:3;translate:0 -50%;width:42px;height:42px;display:grid;place-items:center;cursor:pointer;font:400 1.3rem/1 VT323,monospace;color:var(--tinta);background:var(--amarillo);border:3px solid var(--tinta);box-shadow:3px 3px 0 rgba(0,0,0,.4);transition:transform .15s cubic-bezier(.3,1.8,.5,1)}
+.dex-nav:hover{transform:scale(1.15)}.dex-nav.prev{left:2px}.dex-nav.next{right:2px}
+.dex-dots{position:relative;display:flex;gap:9px;justify-content:center}.dex-dots i{width:12px;height:12px;border:2px solid #fff;transition:background .2s,transform .2s}.dex-dots i.on{background:var(--amarillo);transform:scale(1.35) rotate(45deg)}
+.toast{position:fixed;left:50%;bottom:22px;z-index:80;display:flex;align-items:center;gap:10px;max-width:calc(100vw - 24px);padding:8px 16px;font:400 1.35rem/1.1 VT323,monospace;color:var(--tinta);background:var(--amarillo);border:3px solid var(--tinta);box-shadow:4px 4px 0 rgba(0,0,0,.4);translate:-50% 40px;opacity:0;pointer-events:none;transition:translate .35s cubic-bezier(.2,1.5,.4,1),opacity .25s}
+.toast.show{translate:-50% 0;opacity:1}.toast .ball{flex:none;width:22px;height:22px;border-radius:50%;border:3px solid var(--tinta);background:linear-gradient(#e8202a 0 44%,var(--tinta) 44% 56%,#fff 56%);animation:spin .8s linear 2}
+#fxc{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:70}
+html.rainbow body{animation:rb 1.4s linear 3}@keyframes rb{to{filter:hue-rotate(360deg)}}
+/* Filo News: texto + compu lado a lado */
+.caso.filo{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:22px;align-items:start}
+.caso.filo>.win{position:sticky;top:max(16px,calc(50vh - 190px))}
+@media(max-width:860px){.caso.filo{display:block}.caso.filo>.win{position:static}}
+/* carrusel de videos (coverflow) */
+.vdeck{position:relative;overflow:hidden;--w:min(250px,56vw);margin:8px auto 0;outline-offset:-4px;touch-action:pan-y}
+.vd-stage{position:relative;height:calc(var(--w)*16/9 + 14px);perspective:1100px;overflow:visible}
+.vd-slide{position:absolute;left:50%;top:6px;width:var(--w);margin:0;transform:translateX(-50%) translateX(calc(var(--o)*64%)) translateZ(calc(var(--a)*-130px)) rotateY(calc(var(--o)*-24deg)) scale(calc(1 - var(--a)*.1));opacity:calc(1 - var(--a)*.32);z-index:calc(20 - var(--z));transition:transform .6s cubic-bezier(.2,1,.3,1.08),opacity .4s;will-change:transform}
+.vdeck.drag .vd-slide{transition:none}
+.vd-slide video{display:block;width:100%;aspect-ratio:9/16;object-fit:cover;background:#000;border:3px solid var(--tinta);box-shadow:0 18px 28px rgba(0,0,0,.4)}
+.vd-slide.off video{pointer-events:none}.vd-slide.off{cursor:pointer}
+.vd-nav{position:absolute;top:calc(var(--w)*8/9);z-index:30;width:40px;height:40px;display:grid;place-items:center;cursor:pointer;font:400 1.2rem/1 VT323,monospace;color:var(--tinta);background:var(--amarillo);border:3px solid var(--tinta);box-shadow:3px 3px 0 rgba(0,0,0,.4);transition:transform .15s cubic-bezier(.3,1.8,.5,1)}
+.vd-nav:hover{transform:scale(1.15)}.vd-nav.prev{left:0}.vd-nav.next{right:0}.vd-nav[disabled]{opacity:.3;cursor:default}
+.vd-bar{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:6px}.vd-dots{display:flex;gap:8px}.vd-dots button{width:14px;height:14px;padding:0;cursor:pointer;border:2px solid var(--tinta);background:#fff;transition:transform .2s,background .2s}.vd-dots button.on{background:var(--naranja);transform:scale(1.35) rotate(45deg)}
+.vd-count{font-size:1.4rem}
+@media(max-width:560px){.vd-nav{width:34px;height:34px}}
+@media(max-width:620px){.dex-track{padding-left:max(14px,calc(50% - 33vw));padding-right:max(14px,calc(50% - 33vw));scroll-padding:0}.dcard{scroll-snap-align:center}}
+/* TV */
+.tv{position:relative;max-width:780px;margin:6px auto 4px;padding-top:56px;perspective:900px}
+.tv-body{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 70px;gap:12px;padding:20px 14px 20px 20px;border-radius:34px;border:3px solid var(--tinta);background:linear-gradient(#e2decf,#c5c1b2);box-shadow:inset 0 0 0 3px rgba(255,255,255,.6),10px 12px 0 rgba(0,0,0,.28),0 0 40px rgba(26,0,212,.35);transform:rotateX(var(--tx,0deg)) rotateY(var(--ty,0deg));transition:transform .18s;animation:tvg 3.2s ease-in-out infinite}
+@keyframes tvg{50%{box-shadow:inset 0 0 0 3px rgba(255,255,255,.6),10px 12px 0 rgba(0,0,0,.28),0 0 64px rgba(255,107,255,.6)}}
+.tv-screen{position:relative;overflow:hidden;border:6px solid #14121f;border-radius:26px/22px;background:#000;box-shadow:inset 0 0 30px rgba(0,0,0,.8)}
+.tv video{display:block;width:100%;aspect-ratio:16/9;object-fit:contain;border:0;background:#000;transition:transform .6s cubic-bezier(.2,1.3,.3,1),filter .6s}
+.js .tv:not(.on) video{transform:scaleY(.01) scaleX(1.05);filter:brightness(6)}
+.tv-scan{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,.2) 0 1px,transparent 1px 3px);animation:flk .14s steps(2) infinite}@keyframes flk{50%{opacity:.7}}
+.tv-ant{position:absolute;top:0;left:50%;width:140px;height:60px;translate:-50% 0}.tv-ant i{position:absolute;bottom:0;width:5px;height:64px;background:var(--tinta);transform-origin:50% 100%;animation:ant 4s ease-in-out infinite}.tv-ant i:first-child{left:30px;rotate:-28deg}.tv-ant i:last-child{right:30px;rotate:28deg;animation-delay:-2s}
+@keyframes ant{50%{transform:rotate(7deg)}}
+.tv-side{display:flex;flex-direction:column;align-items:center;gap:14px;padding-top:12px}
+.knob{width:38px;height:38px;border-radius:50%;border:3px solid var(--tinta);background:radial-gradient(circle at 35% 30%,#f4f1e6,#9d9a8d);box-shadow:inset 0 -3px 0 rgba(0,0,0,.25);animation:kn 6s ease-in-out infinite}.knob.k2{animation-delay:-3s}@keyframes kn{50%{transform:rotate(80deg)}}
+.grille{flex:1;min-height:70px;width:46px;background:repeating-linear-gradient(var(--tinta) 0 3px,transparent 3px 8px);opacity:.7}
+.tv-feet{display:flex;justify-content:space-between;padding:0 64px}.tv-feet::before,.tv-feet::after{content:"";width:46px;height:12px;background:var(--tinta);border-radius:0 0 8px 8px}
+@media(max-width:560px){.tv-body{grid-template-columns:minmax(0,1fr) 34px;padding:12px 8px 12px 12px;border-radius:22px}.knob{width:26px;height:26px}.grille{width:26px}}
+/* Vagari por etapas */
+.stepper{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:24px 0 16px}
+.stepper::before{content:"";position:absolute;left:16.6%;right:16.6%;top:27px;height:6px;background:repeating-linear-gradient(90deg,var(--tinta) 0 8px,transparent 8px 14px)}
+.st-fill{position:absolute;left:16.6%;top:27px;height:6px;width:calc(66.8%*var(--p,0));background:var(--naranja);z-index:1;transition:width .6s cubic-bezier(.2,1,.3,1)}
+.st{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:6px;padding:0;background:none;border:0;cursor:pointer;color:var(--tinta);font-family:VT323,monospace}
+.st .num{display:grid;place-items:center;width:56px;height:56px;font-size:2.3rem;line-height:1;background:var(--gris);border:3px solid var(--tinta);box-shadow:3px 3px 0 rgba(0,0,0,.35);transition:transform .3s cubic-bezier(.3,1.8,.5,1),background .2s}
+.st:hover .num{transform:translateY(-4px) rotate(-4deg)}.st[aria-selected=true] .num{background:var(--naranja);color:#fff;transform:scale(1.18) rotate(-4deg)}.st.done .num{background:var(--verde)}
+.st .lbl{font-size:1.4rem;line-height:1;text-transform:uppercase;text-align:center}
+.vpanel{animation:vpIn .55s cubic-bezier(.2,1,.3,1) both}.vpanel[hidden]{display:none}@keyframes vpIn{from{opacity:0;transform:translateX(calc(var(--dir,1)*46px)) scale(.98)}}
+.vpanel>p:first-child{margin-top:0}
+.vp-split{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:22px;align-items:center}.vp-split video.tall{margin:0}
+.vpanels .galeria.g4{grid-template-columns:repeat(4,1fr)}.galeria img{display:block;transition:transform .3s cubic-bezier(.3,1.6,.5,1)}.galeria img:hover{transform:scale(1.07) rotate(-1.5deg);position:relative;z-index:2}
+.vp-news{display:grid;grid-template-columns:minmax(0,200px) 1fr;gap:18px;align-items:center;margin-top:16px}.vp-news .news{margin:0}
+.vp-nav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:18px;font-size:1.3rem}.vp-nav .dex-btn[disabled]{opacity:.35;pointer-events:none}
+@media(max-width:720px){.vp-split,.vp-news{grid-template-columns:1fr}.vp-split video.tall{margin:0 auto}.vpanels .galeria.g4{grid-template-columns:repeat(2,1fr)}.st .lbl{font-size:1.05rem}.st .num{width:46px;height:46px;font-size:1.9rem}.stepper::before,.st-fill{top:22px}.vp-nav .dex-btn{padding:3px 10px;font-size:1.1rem}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition-duration:.01ms!important}.js .rv{opacity:1;transform:none}.js .tv:not(.on) video{transform:none;filter:none}.cloud{animation:none}.foto-frame{cursor:auto}}
+</style>
+<script>document.documentElement.className+=' js'</script>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><filter id="gbc" color-interpolation-filters="sRGB"><feColorMatrix type="saturate" values="1.5"/><feComponentTransfer><feFuncR type="discrete" tableValues="0 .22 .45 .68 .9 1"/><feFuncG type="discrete" tableValues="0 .22 .45 .68 .9 1"/><feFuncB type="discrete" tableValues="0 .22 .45 .68 .9 1"/></feComponentTransfer></filter></defs></svg>
+<div class="sky" aria-hidden="true"><i class="cloud c1"></i><i class="cloud c2"></i><i class="cloud c3"></i><i class="cloud c4"></i></div>
+<div class="prog" id="prog" aria-hidden="true"><i></i></div>
+<main>
+
+<section class="win hero" id="inicio" aria-labelledby="t-inicio">
+ <header><span>tomas_estevez_portfolio.file</span><i aria-hidden="true"><b></b><b></b><b></b></i></header>
+ <div class="body hero-grid">
+  <div class="hero-text">
+  <h1 class="px" id="t-inicio"><span class="a"><span class="cursiva">P</span></span>ORT<span class="b">FOL</span><span class="c">IO</span></h1>
+  <p>Tomás Estévez. Estudiante de Diseño Multimedial en la UNLP: UI/UX, edición de video, motion graphics y animación.</p>
+  <nav class="iconos" aria-label="Secciones">
+   <a href="#sobre-mi">Sobre mí</a><a href="#educacion">Educación</a><a href="#proyectos">Proyectos</a><a href="#contacto">Contacto</a>
+  </nav>
+  </div>
+  <div class="home" id="home">
+   <div class="gb-visor" id="visor" tabindex="0" role="group" aria-label="Game Boy Color interactivo. Tocá la pantalla o los botones de la consola para elegir un ícono: stats, música, visuales interactivos o juegos favoritos. Con el teclado: flechas para moverte, Enter para aceptar y Escape para volver. Arrastrá para girar la consola.">
+    <p class="gb-load px" id="gb-load">Cargando Game Boy…</p>
+   </div>
+   <p class="gb-sr" id="gb-sr" aria-live="polite"></p>
+  </div>
+ </div>
+</section>
+
+<div class="ticker" aria-hidden="true"><div class="tk"><span>★ UI/UX ★ MOTION GRAPHICS ★ EDICIÓN DE VIDEO ★ ANIMACIÓN ★ BRANDING ★ VISUALES INTERACTIVOS ★ TOUCHDESIGNER ★ </span><span>★ UI/UX ★ MOTION GRAPHICS ★ EDICIÓN DE VIDEO ★ ANIMACIÓN ★ BRANDING ★ VISUALES INTERACTIVOS ★ TOUCHDESIGNER ★ </span></div></div>
+
+<section class="win sobre" id="sobre-mi" aria-labelledby="t-sobre">
+ <header><span>sobre_mi.exe</span><i aria-hidden="true"><b></b><b></b><b></b></i></header>
+ <div class="body">
+  <div class="foto" id="foto">
+   <div class="foto-frame">
+    <img src="images/tomas.webp" alt="Retrato de Tomás Estévez con gorra azul" width="638" height="905">
+    <canvas class="foto-px" aria-hidden="true"></canvas><div class="foto-scan" aria-hidden="true"></div><div class="lens" aria-hidden="true"></div>
+   </div>
+   <span class="chip t">Tomás</span><span class="chip e">Estévez</span>
+  </div>
+  <div>
+   <h2 class="px" id="t-sobre"><span class="cursiva">S</span>obre mí</h2>
+   <ul class="verdes" style="margin-top:16px">
+    <li>Estudiante de Diseño Multimedial en la UNLP, dando mis primeros pasos en proyectos digitales.</li>
+    <li>Tengo facilidad tecnológica, lo que me permite resolver problemas técnicos de manera efectiva.</li>
+    <li>Busco aportar mis conocimientos en edición de video, motion graphics y diseño para seguir aprendiendo en la práctica.</li>
+   </ul>
+  </div>
+ </div>
+</section>
+
+<section class="win edu" id="educacion" aria-labelledby="t-edu">
+ <header><span>fundamentos_creativos.doc</span><i aria-hidden="true"><b></b><b></b><b></b></i></header>
+ <div class="body">
+  <h2 class="px" id="t-edu"><span class="cursiva">F</span>undamentos <span class="cursiva">C</span>reativos</h2>
+  <p class="cinta">Licenciatura en Diseño Multimedial, Facultad de Artes, UNLP — 2023 a la actualidad</p>
+  <div class="cols">
+   <div class="win"><div class="body"><h3>Habilidades</h3>
+    <ul class="skills"><li>Motion graphics</li><li>Diseño UX/UI</li><li>Edición de video</li><li>Estética visual</li><li>Diseño gráfico</li></ul></div></div>
+   <div class="win"><div class="body"><h3>Herramientas</h3>
+    <ul class="logos"><li><img src="images/logos/photoshop.png" alt="" width="56" height="56">Photoshop</li><li><img src="images/logos/figma.png" alt="" width="56" height="56">Figma</li><li><img src="images/logos/illustrator.png" alt="" width="56" height="56">Illustrator</li><li><img src="images/logos/canva.png" alt="" width="56" height="56">Canva</li><li><img src="images/logos/after-effects.png" alt="" width="56" height="56">After Effects</li><li><img src="images/logos/capcut.png" alt="" width="56" height="56">CapCut</li></ul></div></div>
+  </div>
+ </div>
+</section>
+
+<section class="proy" id="proyectos" aria-labelledby="t-proy">
+ <div class="win dex" id="dex">
+  <header><span>proyectos_destacados.exe</span><i aria-hidden="true"><b></b><b></b><b></b></i></header>
+  <div class="body">
+   <h2 class="px dex-title" id="t-proy"><span class="cursiva">P</span>royectos <span class="cursiva">D</span>estacados</h2>
+   <div class="dex-hud">
+    <div class="dex-ball" aria-hidden="true"></div>
+    <div class="dex-meter"><div class="dex-xp" aria-hidden="true"><i id="dex-xp"></i></div><span class="px" id="dex-count" aria-live="polite">Proyectodex 0 / 6</span></div>
+    <button class="dex-btn" id="dex-d20" type="button"><span class="d20" id="d20" aria-hidden="true">20</span>Tirar d20</button>
+   </div>
+   <div class="dex-wrap">
+    <button class="dex-nav prev" type="button" aria-label="Carta anterior">◀</button>
+    <div class="dex-track" id="dex-track" role="list" aria-label="Proyectos destacados">
+   <article class="dcard t-ui" role="listitem" tabindex="0" data-go="filo" data-name="Filo News" aria-label="Filo News: Rediseño de la sección de música para descubrir playlists sin vueltas. Tocá para girar la carta.">
+    <div class="dc-inner">
+     <div class="dc-face dc-front"><div class="dc-top"><span class="dc-name px">Filo News</span><span class="dc-hp px">HP 90</span></div>
+      <div class="dc-art"><img src="images/filo-news.jpg" alt="" loading="lazy" decoding="async"></div><div class="dc-type px">UI/UX</div><p class="dc-info">Rediseño de la sección de música para descubrir playlists sin vueltas.</p><div class="dc-foot"><span>N.º 001</span><span class="dc-flip" aria-hidden="true">↻</span></div><div class="dc-holo" aria-hidden="true"></div></div>
+     <div class="dc-face dc-back"><h4 class="px">Filo News</h4><div class="dc-type px">UI/UX</div><ul class="dc-stats"><li><span>Investigación</span><i style="--v:85%"></i><b>85</b></li><li><span>Interfaz</span><i style="--v:90%"></i><b>90</b></li><li><span>Impacto</span><i style="--v:80%"></i><b>80</b></li></ul><button class="dex-btn go" type="button" tabindex="-1">Ver proyecto ▸</button><div class="dc-holo" aria-hidden="true"></div></div>
+    </div>
+   </article>
+   <article class="dcard t-br" role="listitem" tabindex="0" data-go="vagari" data-name="Vagari" aria-label="Vagari: Del branding a una instalación física con visuales interactivos. Tocá para girar la carta.">
+    <div class="dc-inner">
+     <div class="dc-face dc-front"><div class="dc-top"><span class="dc-name px">Vagari</span><span class="dc-hp px">HP 88</span></div>
+      <div class="dc-art"><img src="images/vagari-1.jpg" alt="" loading="lazy" decoding="async"></div><div class="dc-type px">BRANDING</div><p class="dc-info">Del branding a una instalación física con visuales interactivos.</p><div class="dc-foot"><span>N.º 002</span><span class="dc-flip" aria-hidden="true">↻</span></div><div class="dc-holo" aria-hidden="true"></div></div>
+     <div class="dc-face dc-back"><h4 class="px">Vagari</h4><div class="dc-type px">BRANDING</div><ul class="dc-stats"><li><span>Narrativa</span><i style="--v:90%"></i><b>90</b></li><li><span>Identidad</span><i style="--v:88%"></i><b>88</b></li><li><span>Experiencia</span><i style="--v:85%"></i><b>85</b></li></ul><button class="dex-btn go" type="button" tabindex="-1">Ver proyecto ▸</button><div class="dc-holo" aria-hidden="true"></div></div>
+    </div>
+   </article>
+   <article class="dcard t-vi" role="listitem" tabindex="0" data-go="edicion-video" data-name="Edición de video" aria-label="Edición de video: Ritmo, color y narrativa para contar historias en pantalla. Tocá para girar la carta.">
+    <div class="dc-inner">
+     <div class="dc-face dc-front"><div class="dc-top"><span class="dc-name px">Edición de video</span><span class="dc-hp px">HP 84</span></div>
+      <div class="dc-art"><svg viewBox="0 0 120 120" aria-hidden="true"><rect x="22" y="44" width="76" height="52" rx="4" fill="#fff"/><path d="M22 44l8-22 16 6-8 22zm28 6 8-22 16 6-8 22zm28 6 8-22 16 6-8 22z" fill="#14121f" transform="translate(-4 -6) scale(.96)"/><path d="M52 62l22 14-22 14z" fill="#1a00d4"/></svg></div><div class="dc-type px">VIDEO</div><p class="dc-info">Ritmo, color y narrativa para contar historias en pantalla.</p><div class="dc-foot"><span>N.º 003</span><span class="dc-flip" aria-hidden="true">↻</span></div><div class="dc-holo" aria-hidden="true"></div></div>
+     <div class="dc-face dc-back"><h4 class="px">Edición de video</h4><div class="dc-type px">VIDEO</div><ul class="dc-stats"><li><span>Ritmo</span><i style="--v:88%"></i><b>88</b></li><li><span>Color</span><i style="--v:80%"></i><b>80</b></li><li><span>Narrativa</span><i style="--v:84%"></i><b>84</b></li></ul><button class="dex-btn go" type="button" tabindex="-1">Ver proyecto ▸</button><div class="dc-holo" aria-hidden="true"></div></div>
+    </div>
+   </article>
+   <article class="dcard t-re" role="listitem" tabindex="0" data-go="reels" data-name="Reels" aria-label="Reels: Piezas verticales con ritmo y mucho impacto. Tocá para girar la carta.">
+    <div class="dc-inner">
+     <div class="dc-face dc-front"><div class="dc-top"><span class="dc-name px">Reels</span><span class="dc-hp px">HP 92</span></div>
+      <div class="dc-art"><svg viewBox="0 0 120 120" aria-hidden="true"><rect x="38" y="14" width="44" height="92" rx="8" fill="#fff" stroke="#14121f" stroke-width="4"/><path d="M54 48l18 12-18 12z" fill="#ff5a1f"/><rect x="52" y="20" width="16" height="3" rx="1.5" fill="#14121f"/></svg></div><div class="dc-type px">REELS</div><p class="dc-info">Piezas verticales con ritmo y mucho impacto.</p><div class="dc-foot"><span>N.º 004</span><span class="dc-flip" aria-hidden="true">↻</span></div><div class="dc-holo" aria-hidden="true"></div></div>
+     <div class="dc-face dc-back"><h4 class="px">Reels</h4><div class="dc-type px">REELS</div><ul class="dc-stats"><li><span>Ritmo</span><i style="--v:92%"></i><b>92</b></li><li><span>Impacto</span><i style="--v:90%"></i><b>90</b></li><li><span>Tendencia</span><i style="--v:85%"></i><b>85</b></li></ul><button class="dex-btn go" type="button" tabindex="-1">Ver proyecto ▸</button><div class="dc-holo" aria-hidden="true"></div></div>
+    </div>
+   </article>
+   <article class="dcard t-an" role="listitem" tabindex="0" data-go="animacion" data-name="Animación" aria-label="Animación: Movimiento con estilo propio y una técnica cada vez más fina. Tocá para girar la carta.">
+    <div class="dc-inner">
+     <div class="dc-face dc-front"><div class="dc-top"><span class="dc-name px">Animación</span><span class="dc-hp px">HP 86</span></div>
+      <div class="dc-art"><svg viewBox="0 0 120 120" aria-hidden="true"><path d="M60 10l14 34 36 3-28 24 9 36-31-20-31 20 9-36L10 47l36-3z" fill="#fff94a" stroke="#14121f" stroke-width="4" stroke-linejoin="round"/></svg></div><div class="dc-type px">MOTION</div><p class="dc-info">Movimiento con estilo propio y una técnica cada vez más fina.</p><div class="dc-foot"><span>N.º 005</span><span class="dc-flip" aria-hidden="true">↻</span></div><div class="dc-holo" aria-hidden="true"></div></div>
+     <div class="dc-face dc-back"><h4 class="px">Animación</h4><div class="dc-type px">MOTION</div><ul class="dc-stats"><li><span>Fluidez</span><i style="--v:86%"></i><b>86</b></li><li><span>Estilo</span><i style="--v:90%"></i><b>90</b></li><li><span>Técnica</span><i style="--v:82%"></i><b>82</b></li></ul><button class="dex-btn go" type="button" tabindex="-1">Ver proyecto ▸</button><div class="dc-holo" aria-hidden="true"></div></div>
+    </div>
+   </article>
+   <article class="dcard t-vj" role="listitem" tabindex="0" data-go="vagari" data-stage="3" data-name="Visuales" aria-label="Visuales: Visuales que responden al público y se proyectan en vivo. Tocá para girar la carta.">
+    <div class="dc-inner">
+     <div class="dc-face dc-front"><div class="dc-top"><span class="dc-name px">Visuales</span><span class="dc-hp px">HP 90</span></div>
+      <div class="dc-art"><svg viewBox="0 0 120 120" aria-hidden="true"><rect x="10" y="24" width="100" height="72" rx="6" fill="#10143a" stroke="#fff" stroke-width="3"/><path d="M16 60q11-30 22 0t22 0 22 0 22 0" fill="none" stroke="#38c8f0" stroke-width="5"/><path d="M16 70q11-24 22 0t22 0 22 0 22 0" fill="none" stroke="#ff6bff" stroke-width="4"/></svg></div><div class="dc-type px">TOUCHDESIGNER</div><p class="dc-info">Visuales que responden al público y se proyectan en vivo.</p><div class="dc-foot"><span>N.º 006</span><span class="dc-flip" aria-hidden="true">↻</span></div><div class="dc-holo" aria-hidden="true"></div></div>
+     <div class="dc-face dc-back"><h4 class="px">Visuales</h4><div class="dc-type px">TOUCHDESIGNER</div><ul class="dc-stats"><li><span>Interacción</span><i style="--v:92%"></i><b>92</b></li><li><span>Ritmo</span><i style="--v:88%"></i><b>88</b></li><li><span>Técnica</span><i style="--v:85%"></i><b>85</b></li></ul><button class="dex-btn go" type="button" tabindex="-1">Ver proyecto ▸</button><div class="dc-holo" aria-hidden="true"></div></div>
+    </div>
+   </article>
+    </div>
+    <button class="dex-nav next" type="button" aria-label="Carta siguiente">▶</button>
+   </div>
+   <div class="dex-dots" id="dex-dots" aria-hidden="true"></div>
+  </div>
+ </div>
+
+ <article class="caso filo">
+  <div class="win"><header><span>filo_news.fig</span><i aria-hidden="true"><b></b><b></b><b></b></i></header>
+   <div class="body">
+    <span class="tag">UI/UX</span>
+    <h3 style="color:var(--rojo)">Rediseño Filo News</h3>
+    <p class="globo">Rediseño de la sección de música de Filo News, enfocado en que los usuarios descubran playlists sin vueltas y con alto impacto visual.</p>
+    <p>Nació a partir de un estudio de usuarios. Adapté la interfaz para mobile y desktop, con una arquitectura y jerarquías pensadas para conectar al público joven con las tendencias musicales de forma directa y dinámica.</p>
+    <div class="btns">
+     <a class="btn" href="#" target="_blank" rel="noopener">Ver prototipo</a>
+     <a class="btn" href="#" target="_blank" rel="noopener">Ver memoria</a>
+    </div>
+   </div></div>
+  <div class="pc-scroll" id="pc-scroll">
+   <div class="pc-stage">
+    <div class="pc-shadow" aria-hidden="true"></div>
+    <div class="pc-3d" role="img" aria-label="Mini computadora retro que muestra el mockup desktop de Filo News. Al bajar por la página gira y recorre el mockup.">
+     <div class="pc-f pc-front">
+      <div class="pc-bezel"><div class="pc-view"><img src="images/filo-news.jpg" alt="Mockup desktop de Tu Radar Musical, rediseño de Filo News: hero con playlist personalizada, moods y formulario" width="1000" height="1500" decoding="async"></div></div>
+      <div class="pc-stripe"></div><div class="pc-drive"></div><div class="pc-led"></div><div class="pc-brand">FILO NEWS</div>
+     </div>
+     <div class="pc-f pc-back"><div class="pc-vents"></div><div class="pc-port"></div><div class="pc-port p2"></div><div class="pc-plate">MODEL FN-95</div></div>
+     <div class="pc-f pc-left"></div><div class="pc-f pc-right"></div><div class="pc-f pc-top"></div><div class="pc-f pc-bottom"></div>
+    </div>
+   </div>
+  </div>
+ </article>
+
+ <article class="full win" id="edicion-video"><header><span>edicion_de_video.mp4</span><i aria-hidden="true"><b></b><b></b><b></b></i></header>
+  <div class="body"><span class="tag">Video</span><h3 style="color:var(--azul)">Edición de video</h3>
+   <div class="vdeck" data-vdeck tabindex="0" role="group" aria-roledescription="carrusel" aria-label="Videos de edición"><div class="vd-stage"><figure class="vd-slide"><video preload="metadata" playsinline muted loop src="videos/video1.mp4"></video></figure><figure class="vd-slide"><video preload="metadata" playsinline muted loop src="videos/video3.mp4"></video></figure></div><button class="vd-nav prev" type="button" aria-label="Video anterior">◀</button><button class="vd-nav next" type="button" aria-label="Video siguiente">▶</button><div class="vd-bar"><div class="vd-dots"></div><span class="vd-count px" aria-live="polite"></span></div></div></div></article>
+
+ <article class="full win" id="reels"><header><span>edicion_de_reels.mp4</span><i aria-hidden="true"><b></b><b></b><b></b></i></header>
+  <div class="body"><span class="tag">Reels</span><h3 style="color:var(--naranja)">Edición de reels</h3>
+   <div class="vdeck" data-vdeck tabindex="0" role="group" aria-roledescription="carrusel" aria-label="Reels"><div class="vd-stage"><figure class="vd-slide"><video preload="metadata" playsinline muted loop src="videos/reel1.mp4"></video></figure><figure class="vd-slide"><video preload="metadata" playsinline muted loop src="videos/reel2.mp4"></video></figure><figure class="vd-slide"><video preload="metadata" playsinline muted loop src="videos/reel3.mp4"></video></figure></div><button class="vd-nav prev" type="button" aria-label="Video anterior">◀</button><button class="vd-nav next" type="button" aria-label="Video siguiente">▶</button><div class="vd-bar"><div class="vd-dots"></div><span class="vd-count px" aria-live="polite"></span></div></div></div></article>
+
+ <article class="full win" id="animacion"><header><span>animacion.mp4</span><i aria-hidden="true"><b></b><b></b><b></b></i></header>
+  <div class="body"><span class="tag">Motion</span><h3 style="color:#0a9a25">Animación</h3>
+   <div class="tv" id="tv"><div class="tv-ant" aria-hidden="true"><i></i><i></i></div><div class="tv-body"><div class="tv-screen"><video class="wide" controls preload="metadata" playsinline src="videos/animacion.mp4"></video><div class="tv-scan" aria-hidden="true"></div></div><div class="tv-side" aria-hidden="true"><i class="knob"></i><i class="knob k2"></i><div class="grille"></div></div></div><div class="tv-feet" aria-hidden="true"></div></div></div></article>
+
+ <article class="full win" id="vagari"><header><span>vagari.ai</span><i aria-hidden="true"><b></b><b></b><b></b></i></header>
+  <div class="body"><span class="tag">Proyecto creativo</span><h3 style="color:var(--naranja)">Vagari: del branding a la instalación</h3>
+   <p class="globo">Un universo onírico que nació como branding y terminó convertido en una instalación física con visuales interactivos.</p>
+   <p>Vagari es el portal de Oniria, un universo donde el valor está en los sueños. Sus habitantes son nómades que viajan entre mundos soñados: acceden a un prado onírico donde los espera una puerta cerrada en medio del pastizal. No tiene llave convencional: se abre combinando símbolos. El proyecto avanzó en tres etapas.</p>
+
+   <div class="stepper" id="stepper" role="tablist" aria-label="Etapas de Vagari">
+    <i class="st-fill" aria-hidden="true"></i>
+    <button class="st" role="tab" id="vs-1" aria-controls="vp-1" aria-selected="true" type="button"><span class="num">01</span><span class="lbl">Branding</span></button>
+    <button class="st" role="tab" id="vs-2" aria-controls="vp-2" aria-selected="false" tabindex="-1" type="button"><span class="num">02</span><span class="lbl">Transmedia</span></button>
+    <button class="st" role="tab" id="vs-3" aria-controls="vp-3" aria-selected="false" tabindex="-1" type="button"><span class="num">03</span><span class="lbl">Instalación final</span></button>
+   </div>
+   <div class="vpanels">
+    <div class="vpanel active" role="tabpanel" id="vp-1" aria-labelledby="vs-1">
+     <p>Definimos el nombre, la narrativa y la personalidad de Vagari (el arquetipo del explorador), con un tono de voz misterioso, enigmático y dinámico. Armamos la identidad visual (paleta de verde, rosa, azul, negro y blanco; Naive Font para títulos y Montserrat para textos), un sistema de símbolos para configurar la puerta y una experiencia pensada para los cuatro sentidos: paisaje sonoro, aromas vegetales, texturas y sabores. Todo quedó reunido en el manual de marca.</p>
+     <div class="galeria g4">
+      <img src="images/vagari-1.jpg" alt="Portada de Vagari: logotipo cromado sobre un pastizal" loading="lazy">
+      <img src="images/vagari-2.jpg" alt="Sistema de símbolos de Vagari: elementos, estado, momentos del día y color" loading="lazy">
+      <img src="images/vagari-3.jpg" alt="Paleta de color de Vagari: verde, rosa, azul, negro y blanco" loading="lazy">
+      <img src="images/vagari-4.jpg" alt="Tipografía Naive Font usada en los títulos de Vagari" loading="lazy">
+     </div>
+     <div class="vp-news">
+      <img class="news" src="images/newsletter-1.jpg" alt="Newsletter de Vagari: portada con una puerta en un prado, texto de bienvenida y botón Registrarme" loading="lazy">
+      <div><p class="globo">Newsletter: quienes dejaban sus datos al comprar un llavero recibían esta bienvenida, escrita con el tono de la marca.</p>
+      <div class="btns"><a class="btn" href="docs/branding.pdf" target="_blank" rel="noopener">Ver manual de marca</a></div></div>
+     </div>
+    </div>
+    <div class="vpanel" role="tabpanel" id="vp-2" aria-labelledby="vs-2" hidden>
+     <div class="vp-split"><div><p>Llevamos el universo fuera de la pantalla: llaveros y mapas con símbolos, búsqueda de pistas por la ciudad y una pieza de realidad aumentada donde los conceptos del branding se materializan.</p></div>
+     <video class="tall" controls preload="metadata" playsinline src="videos/realidad_aumentada.mp4"></video></div>
+    </div>
+    <div class="vpanel" role="tabpanel" id="vp-3" aria-labelledby="vs-3" hidden>
+     <p>El cierre del proyecto: una instalación física donde el universo se podía recorrer. Hice con TouchDesigner los visuales interactivos que respondían al público y los visuales que se proyectaron en una tele dentro de la misma instalación.</p>
+     <div class="dos">
+      <figure><video class="wide" controls preload="metadata" playsinline src="videos/visuales_interactivos.mp4"></video><figcaption>Visuales interactivos · TouchDesigner</figcaption></figure>
+      <figure><video class="wide" controls preload="metadata" playsinline src="videos/visuales_taller_tele.mp4"></video><figcaption>Visuales para la tele · TouchDesigner</figcaption></figure>
+     </div>
+    </div>
+   </div>
+   <div class="vp-nav"><button class="dex-btn" id="vp-prev" type="button">◀ Etapa anterior</button><span class="px" id="vp-count">Etapa 1 de 3</span><button class="dex-btn" id="vp-next" type="button">Siguiente etapa ▶</button></div>
+  </div></article>
+</section>
+
+<section class="contacto" id="contacto" aria-labelledby="t-contacto">
+ <video class="fondo" autoplay muted loop playsinline aria-hidden="true" src="videos/final.mp4"></video>
+ <div class="in">
+  <h2 class="px" id="t-contacto"><span class="cursiva">D</span>isponible<br>para proyectos</h2>
+  <a class="pill mail" href="mailto:esteveztomii@gmail.com">esteveztomii@gmail.com</a>
+  <a class="pill" href="https://wa.me/5491135643671">+54 9 11 3564-1671</a>
+ </div>
+</section>
+
+</main>
+
+<footer class="legal">
+ Modelo 3D «Game Boy Challenge» de <a href="https://sketchfab.com/3d-models/game-boy-challenge-a91c7818d2aa4331aabb3962b29548be" target="_blank" rel="noopener">LisHard</a>, licencia <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>, vía Sketchfab. Game Boy es marca de Nintendo. Los logos, juegos y canciones mencionados pertenecen a sus respectivos dueños; los fragmentos musicales duran 30 segundos. Proyecto fan sin fines de lucro.
+</footer>
+
+<script src="js/three.min.js"></script>
+<script src="js/GLTFLoader.js"></script>
+<script src="js/gameboy-model.js"></script>
+<script src="js/foto-gb.js"></script>
+<script src="js/logos-gb.js"></script>
+<script src="js/musica.js"></script>
+<script src="js/home.js"></script>
+<script src="js/filo-pc.js"></script>
+<script src="js/extra.js"></script>
+</body>
+</html>
